@@ -1,13 +1,11 @@
-import React, {DetailedHTMLProps, AllHTMLAttributes, useState} from 'react';
+import React, { DetailedHTMLProps, AllHTMLAttributes, useState } from 'react';
+import { twParse } from '../../lib/functionHelpers';
 import TailwindCustomizer from '../../lib/StyleCustomizer';
-import {ReusableComponentBase} from '../../lib/typeHelpers';
-const DefaultCss =
-    `elevation-2
+import { ReusableComponentBase } from '../../lib/typeHelpers';
+import useClassNameManager from '../../lib/useClassNameManager';
+const DefaultCss = {
+  main: twParse`elevation-2
     w-full
-    max-w-sm
-    mt-16
-    lg:mr-8
-    lg:last:mr-0
     text-center
     px-8
     rounded-lg 
@@ -17,24 +15,12 @@ const DefaultCss =
     text-gray-900
     bg-white
     flex 
-    flex-col`;
+    flex-col`,
+};
 
-    interface CardProps extends ReusableComponentBase{
-    }
-    const Card: React.FunctionComponent<CardProps> =({
-        children,styles
-    })=> {
-        const [classNameGetter, setClassNameGetter] = useState( new TailwindCustomizer('', DefaultCss, styles?.container) )
-        
-        return (
-            <div className={
-                classNameGetter.getClassName()
-            }
-            
->
-    {children}
-</div>
-);
-}
+interface CardProps extends ReusableComponentBase {}
+const Card: React.FunctionComponent<CardProps> = ({ children, styles }) => {
+  const classNames = useClassNameManager(styles, DefaultCss);
+  return <div className={classNames.getClassName('main')}>{children}</div>;
+};
 export default Card;
-

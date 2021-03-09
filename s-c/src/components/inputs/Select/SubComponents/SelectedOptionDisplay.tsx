@@ -1,11 +1,14 @@
 import React, {useState, useEffect, useContext, useCallback, useRef} from 'react';
-import TailwindCustomizer, {  StyleOverride} from '../../../../lib/StyleCustomizer';
-import { ReusableComponentBase } from '../../../../lib/typeHelpers';
+import { twParse } from '../../../../lib/functionHelpers';
+import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelpers';
+import useClassNameManager from '../../../../lib/useClassNameManager';
 
-const DefaultCss = 'w-auto elevation-1 cursor-pointer overflow-hidden flex-nowrap h-8 bg-white p-3 s-flex-row space-x-3';
+const DefaultCss = {
+    main: twParse`w-auto elevation-1 cursor-pointer overflow-hidden flex-nowrap h-8 bg-white p-3 s-flex-row space-x-3`
+};
 
 export type SelectedOptionDisplayStyles = {
-    container: StyleOverride
+    main: StyleOverride
 }
 
 interface SelectedOptionDisplayProps extends ReusableComponentBase{
@@ -15,9 +18,10 @@ interface SelectedOptionDisplayProps extends ReusableComponentBase{
 const SelectedOptionDisplay: React.FunctionComponent<SelectedOptionDisplayProps> =({
     styles, children, onClick
 })=> {
-    const [contClassName, setContClassName] = useState(new TailwindCustomizer('',DefaultCss, styles?.container));
+    const classNames = useClassNameManager(styles,DefaultCss);
+    console.log('got these classnames for selectedOptionDisplay',classNames.getClassName('main'))
 return (
-<div className={contClassName.getClassName()} onClick={onClick}>
+<div className={classNames.getClassName('main')} onClick={onClick}>
     {children}
 </div>
 );

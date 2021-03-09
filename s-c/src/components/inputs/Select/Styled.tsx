@@ -12,6 +12,7 @@ import DropdownItem from './SubComponents/DropdownItem';
 import { Option, StyledSelectProps } from './index';
 import SelectedOptionDisplay from './SubComponents/SelectedOptionDisplay';
 import Container from './SubComponents/StyledSelectContainer';
+import useClassNameManager from '../../../lib/useClassNameManager';
 
 const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
   children,
@@ -22,6 +23,8 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
 }) => {
   const [displayDropdown, setDisplayDropdown] = useState<boolean>(false);
 
+  const classNames = useClassNameManager(styles, undefined);
+
   function handleItemClick(option: Option) {
     console.log('item clicked in StyledSelect', option);
     onChange(option);
@@ -29,28 +32,24 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
   return (
     <Container
       closeCallback={() => setDisplayDropdown(false)}
-      styles={styles ? { container: styles?.container } : undefined}
+      styles={classNames.getObj('Container')}
     >
       <SelectedOptionDisplay
         onClick={() => setDisplayDropdown(prev => !prev)}
-        styles={
-          styles ? { container: styles?.selectedOptionDisplay } : undefined
-        }
+        styles={classNames.getObj('SelectedOptionDisplay')}
       >
         {selected ? selected.content : 'Select an Option'}
       </SelectedOptionDisplay>
       <Dropdown
         display={displayDropdown}
-        styles={styles ? { container: styles?.dropdownContainer } : undefined}
+        styles={classNames.getObj('DropdownContainer')}
       >
         {children
           ? children
           : options.map((option: Option) => {
               return (
                 <DropdownItem
-                  styles={
-                    styles ? { container: styles?.dropdownItem } : undefined
-                  }
+                  styles={classNames.getObj('DropdownItem')}
                   key={option.id}
                   onClick={() => {
                     handleItemClick(option);

@@ -1,24 +1,27 @@
 import React, {useState, useEffect, useContext, useCallback, useRef} from 'react';
-import TailwindCustomizer, {  StyleOverride} from '../../../../lib/StyleCustomizer';
-import { ReusableComponentBase } from '../../../../lib/typeHelpers';
+import { twParse } from '../../../../lib/functionHelpers';
+import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelpers';
+import useClassNameManager from '../../../../lib/useClassNameManager';
 
-const DefaultCss = 'cursor-pointer';
+const DefaultCss = {
+    main: twParse`cursor-pointer`
+}
 
 
 interface DropdownItemProps extends ReusableComponentBase{
     onClick: any
     isSelected: boolean
     styles?: {
-        container: StyleOverride
+        main: StyleOverride
     }
 }
 const DropdownItem: React.FunctionComponent<DropdownItemProps> =({
     children, onClick, isSelected, styles
 })=> {
-    const [contClassName, setContClassName] = useState(new TailwindCustomizer('',DefaultCss, styles?.container));
+    const classNames = useClassNameManager(styles, DefaultCss);
 
 return (
-<div onClick={onClick} className={contClassName.getClassName()} >
+<div onClick={onClick} className={classNames.getClassName('main')} >
     {children}
 </div>
 );

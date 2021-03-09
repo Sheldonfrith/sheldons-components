@@ -1,27 +1,30 @@
 import React, {useState, useEffect, useContext, useCallback, useRef} from 'react';
-import TailwindCustomizer, {  StyleOverride} from '../../../../lib/StyleCustomizer';
-import { ReusableComponentBase } from '../../../../lib/typeHelpers';
+import { twParse } from '../../../../lib/functionHelpers';
+import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelpers';
+import useClassNameManager from '../../../../lib/useClassNameManager';
 
-const DefaultCssContainer = 'cursor-pointer bg-secondary max-h-100 s-flex-row p-2 space-x-2';
-const DefaultCssIcon = 'bg-danger w-2 h-2 m-x-2';
+const DefaultCss = {
+    container: twParse`cursor-pointer bg-secondary max-h-100 s-flex-row p-2 space-x-2`,
+    icon: twParse`bg-danger w-2 h-2 m-x-2`
+};
 
 interface ItemWithXToRemoveProps extends ReusableComponentBase{
     onClick: any
     styles?: {
         container: StyleOverride
+        textContainer: StyleOverride
         icon: StyleOverride
     } 
 }
 const ItemWithXToRemove: React.FunctionComponent<ItemWithXToRemoveProps> =({
     onClick, children, styles
 })=> {
-    const [contClassName, setContClassName] = useState(new TailwindCustomizer('',DefaultCssContainer, styles?.container));
-    const [iconClassName, setIconClassName] = useState(new TailwindCustomizer('',DefaultCssIcon, styles?.icon));
+    const classNames = useClassNameManager(styles, DefaultCss);
 
 return (
-<div onClick={onClick} className={contClassName.getClassName()} >
-    <div>{children}</div>
-    <div className={iconClassName.getClassName()}></div>
+<div onClick={onClick} className={classNames.getClassName('container')} >
+    <div className={classNames.getClassName('textContainer')}>{children}</div>
+    <div className={classNames.getClassName('icon')}></div>
 </div>
 );
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Card} from '../src';
-import {StyleOverride} from '../src/lib/StyleCustomizer';
 
 
 const meta: Meta = {
@@ -35,9 +34,7 @@ console.log( css2obj("z-index: 4; opacity:1; transition-duration: 0.3s;") )
 
 export default meta;
 
-const testNewStyle: StyleOverride = {
-  partial: true,
-} 
+
 const Template: Story<React.ComponentProps<typeof Card>> = args => <Card {...args} />;
 
 // By passing using the Args format for exported stories, you can control the props for a component for reuse in a test

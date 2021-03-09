@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { twParse } from '../../lib/functionHelpers';
 import TailwindCustomizer from '../../lib/StyleCustomizer';
-import {ReusableComponentBase} from '../../lib/typeHelpers';
+import {ReusableComponentBase, StyleOverride} from '../../lib/typeHelpers';
+import useClassNameManager from '../../lib/useClassNameManager';
 
-const DefaultCss = `mt-6 first:mt-0 border-b-2 py-3 focus:outline-none font-medium transition duration-300 hocus:border-primary-500`;
+const DefaultCss = {
+    main: twParse`mt-6 first:mt-0 border-b-2 py-3 focus:outline-none font-medium transition duration-300 hocus:border-primary-500`
+}
 
 interface TextInputProps extends ReusableComponentBase{
     type?: string;
@@ -10,11 +14,14 @@ interface TextInputProps extends ReusableComponentBase{
     value: string,
     placeholder?: string
     valueIsDefault?: boolean
+    styles?: {
+        main: StyleOverride
+    }
 }
 const TextInput: React.FunctionComponent<TextInputProps> =({
      type, onChange, value, placeholder, valueIsDefault, styles
 })=> {
-    const [contClassName ,setContClassName] = useState(new TailwindCustomizer('', DefaultCss, styles?.container))
+    const classNames = useClassNameManager(styles, DefaultCss);
     function getElementProps (){
         const obj: {[key: string]: any}= {};
         obj['type'] = type || "text";
@@ -29,7 +36,7 @@ const TextInput: React.FunctionComponent<TextInputProps> =({
     }
 
 return (
-<input className={contClassName.getClassName()} 
+<input className={classNames.getClassName('main')} 
     {...getElementProps}    
 />
 );

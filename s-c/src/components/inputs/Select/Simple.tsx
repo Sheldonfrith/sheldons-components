@@ -7,10 +7,13 @@ import React, {
   ChangeEvent,
 } from 'react';
 import { Option, SimpleSelectProps } from './index';
-import TailwindCustomizer from '../../../lib/StyleCustomizer';
+import { twParse } from '../../../lib/functionHelpers';
+import useClassNameManager from '../../../lib/useClassNameManager';
 
-const DefaultCssSelect = '';
-const DefaultCssOption = '';
+const DefaultCss = {
+    select: twParse``,
+    option: twParse``,
+}
 
 const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
   children,
@@ -23,7 +26,7 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
     selected
   );
   const [value, setValue] = useState<undefined | string>(undefined);
-
+    const classNames = useClassNameManager(styles, DefaultCss);
   //whenever selected option or internal selected option change ,change value
   useEffect(() => {
     if (selected) setValue(selected.value);
@@ -40,18 +43,12 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
     setInternalSelectedOption(option);
   }
 
-  const [selectClassName, setSelectClassName] = useState(
-    new TailwindCustomizer('', DefaultCssSelect, styles?.select)
-  );
-  const [optionClassName, setOptionClassName] = useState(
-    new TailwindCustomizer('', DefaultCssOption, styles?.option)
-  );
 
   return (
     <select
       value={value}
       onChange={handleChange}
-      className={selectClassName.getClassName()}
+      className={classNames.getClassName('select')}
       
     >
       {children
@@ -61,7 +58,7 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
               <option
                 key={option.id}
                 value={option.value}
-                className={optionClassName.getClassName()}
+                className={classNames.getClassName('option')}
                 
               >
                 {option.content}

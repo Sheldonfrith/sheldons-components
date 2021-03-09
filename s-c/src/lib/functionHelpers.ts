@@ -13,13 +13,24 @@ function* traverse(o:any, path:string[]=[]): any {
     }
 }
 
+type TravCallback = (key: string, value: any, path: string[], parent: object)=>void
+
+function myTraverse(o: any,  callback: TravCallback, path: string[]=[],){
+    Object.keys(o).forEach((key:string)=>{
+        const val = o[key];
+        const newPath = path.concat(key);
+        callback(key,val, newPath, o);
+        if (val !== null && typeof(val)=="object"){
+            myTraverse(val,callback, newPath);
+        }
+    })
+}
+
 export function traverseObject(o: object, callback: (key:string|number, value:any, path: string[],parent: object)=>void){
-    for(var [key, value, path, parent] of traverse(o)) {
-        callback(key,value,path,parent);
-    }
+    myTraverse(o,callback);
 }
 
 export function twParse(strings: TemplateStringsArray, ...otherParams: any){
     const str = strings[0];
-    return str.split(/\s/);
+    return str.split(/\s/).filter(item => item);
 }

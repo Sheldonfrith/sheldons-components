@@ -12,9 +12,8 @@ import ItemWithXToRemove from './SubComponents/ItemWithXToRemove';
 import { MultiSelectProps, Option } from './index';
 import SelectedOptionDisplay, { SelectedOptionDisplayStyles } from './SubComponents/SelectedOptionDisplay';
 import Container from './SubComponents/StyledSelectContainer';
-import { StyleOverride } from '../../../lib/StyleCustomizer';
-import { BaseStylesProp, TwClasses } from '../../../lib/typeHelpers';
-import { StyleSheetManager } from 'styled-components';
+import {twParse}from '../../../lib/functionHelpers';
+import useClassNameManager from '../../../lib/useClassNameManager';
 
 const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
   children,
@@ -24,28 +23,15 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
   styles,
 }) => {
   const [displayDropdown, setDisplayDropdown] = useState<boolean>(false);
-
+  const classNames = useClassNameManager(styles,undefined)
   //whenever displayDropdown changes, update the injected styles
   useEffect(()=>{
-    if (!displayDropdown) stylesManager('SelectedOptionDisplay.main',add, 'rounded-b-none');
-    else StyleSheetManager('SelectedOptionDisplay.main',remove,'rounded-b-none');
+    if (!displayDropdown) classNames.add('SelectedOptionDisplay.main',twParse`bg-black`);
+    else classNames.remove('SelectedOptionDisplay.main',[/bg-black/]);
   },[displayDropdown]);
-
-  enum operations {
-    add,
-    remove,
-    partial
-  }
-//styles.add
-//styles.remove
-//styles.partial
-  function stylesManager(path: string, operation: operations, ipnut: TwClasses|boolean){
-    
-  }
 
   function handleItemClick(option: Option) {
     if (selected?.find(o => o.value === option.value)) return;
-
     onChange(selected ? [...selected, option] : [option]);
   }
   function handleRemoveItem(option: Option) {
@@ -56,24 +42,18 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
   return (
     <Container
       closeCallback={() => setDisplayDropdown(false)}
-      styles={styles ? { container: styles?.container } : undefined}
+      // styles={classNames.getObj<React.ComponentProps<typeof Container>>('main')}
+      styles={classNames.getObj('main')}
     >
       <SelectedOptionDisplay
         onClick={() => setDisplayDropdown(prev => !prev)}
-        styles={   getStylesWithInjections<SelectedOptionDisplayStyles>('selectedOptionDisplay','container')}
+        styles={classNames.getObj('SelectedOptionDisplay')}
       >
         {selected && selected.length
           ? selected.map((option: Option) => {
               return (
                 <ItemWithXToRemove
-                  styles={
-                    styles
-                      ? {
-                          container: styles?.itemWithXToRemove,
-                          icon: styles?.itemWithXToRemoveIcon,
-                        }
-                      : undefined
-                  }
+                  styles={classNames.getObj('ItemWithXToRemove')}
                   key={option.id}
                   onClick={() => handleRemoveItem(option)}
                 >
@@ -85,7 +65,7 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
       </SelectedOptionDisplay>
       <Dropdown
         display={displayDropdown}
-        styles={styles ? { container: styles?.dropdownContainer } : undefined}
+        styles={classNames.getObj('DropdownContainer')}
       >
         {children
           ? children
@@ -93,9 +73,7 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
               return (
                 <DropdownItem
                   key={option.id}
-                  styles={
-                    styles ? { container: styles?.dropdownItem } : undefined
-                  }
+                  styles={classNames.getObj('DropdownItem')}
                   onClick={() => {
                     handleItemClick(option);
                   }}

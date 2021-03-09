@@ -1,21 +1,25 @@
 import React, {useState, useEffect, useContext, useCallback, useRef} from 'react';
-import TailwindCustomizer, {  StyleOverride} from '../../../../lib/StyleCustomizer';
-import { ReusableComponentBase } from '../../../../lib/typeHelpers';
+import { twParse } from '../../../../lib/functionHelpers';
+import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelpers';
+import useClassNameManager from '../../../../lib/useClassNameManager';
 
 
-const DefaultCss = "bg-secondary elevation-1 p-3 rounded-t-none";
+const DefaultCss = {
+    main: twParse`bg-secondary elevation-1 p-3 rounded-t-none`
+}
 
 interface DropdownProps extends ReusableComponentBase{
     styles?: {
-        container: StyleOverride
+        main: StyleOverride
     }
     display: boolean
 }
 const Dropdown: React.FunctionComponent<DropdownProps> =({children, styles, display})=> {
-const [contClassName, setContClassName] = useState(new TailwindCustomizer('',DefaultCss, styles?.container));
+const classNames = useClassNameManager(styles, DefaultCss);
+
 if (display){
 return (
-<div className={contClassName.getClassName()}  >
+<div className={classNames.getClassName('main')}>
     {children}
 </div>
 );
