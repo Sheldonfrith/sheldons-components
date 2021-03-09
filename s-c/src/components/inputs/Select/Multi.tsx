@@ -13,7 +13,8 @@ import { MultiSelectProps, Option } from './index';
 import SelectedOptionDisplay, { SelectedOptionDisplayStyles } from './SubComponents/SelectedOptionDisplay';
 import Container from './SubComponents/StyledSelectContainer';
 import { StyleOverride } from '../../../lib/StyleCustomizer';
-import { BaseStylesProp } from '../../../lib/typeHelpers';
+import { BaseStylesProp, TwClasses } from '../../../lib/typeHelpers';
+import { StyleSheetManager } from 'styled-components';
 
 const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
   children,
@@ -26,10 +27,21 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
 
   //whenever displayDropdown changes, update the injected styles
   useEffect(()=>{
-    if (!displayDropdown) removeClassNameFromConditionalClassNames(/rounded-b-none/, 'selectedOptionDisplay');
-    else addClassNameToConditionalClassNames('rounded-b-none', 'selectedOptionDisplay');
+    if (!displayDropdown) stylesManager('SelectedOptionDisplay.main',add, 'rounded-b-none');
+    else StyleSheetManager('SelectedOptionDisplay.main',remove,'rounded-b-none');
   },[displayDropdown]);
 
+  enum operations {
+    add,
+    remove,
+    partial
+  }
+//styles.add
+//styles.remove
+//styles.partial
+  function stylesManager(path: string, operation: operations, ipnut: TwClasses|boolean){
+    
+  }
 
   function handleItemClick(option: Option) {
     if (selected?.find(o => o.value === option.value)) return;
@@ -48,7 +60,7 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
     >
       <SelectedOptionDisplay
         onClick={() => setDisplayDropdown(prev => !prev)}
-        styles={getStylesWithInjections<SelectedOptionDisplayStyles>('selectedOptionDisplay','container')}
+        styles={   getStylesWithInjections<SelectedOptionDisplayStyles>('selectedOptionDisplay','container')}
       >
         {selected && selected.length
           ? selected.map((option: Option) => {

@@ -5,24 +5,24 @@ import React, {
   useCallback,
   useRef,
 } from 'react';
-import TailwindCustomizer, {
-  StyleOverride,
-} from '../../lib/StyleCustomizer';
-import { ReusableComponentBase } from '../../lib/typeHelpers';
 
-const DefaultCss = `h1`;
+import { ReusableComponentBase, StyleDefaults } from '../../lib/typeHelpers';
+import {twParse} from '../../lib/functionHelpers';
+import useClassNameManager from '../../lib/useClassNameManager';
+
+const DefaultCss: StyleDefaults = {
+    main: twParse`bg-dark`,
+};
 
 interface HeaderProps extends ReusableComponentBase {}
 
 const Header: React.FunctionComponent<HeaderProps> = ({ children, styles }) => {
-  const [contClassName, setContClassName] = useState(
-    new TailwindCustomizer('', DefaultCss, styles?.container)
-  );
+
+  const classNames = useClassNameManager(styles, DefaultCss);
 
   return (
     <div
-      className={contClassName.getClassName()}
-      
+      className={classNames.getClassName('main')}
     >
       {children}
     </div>

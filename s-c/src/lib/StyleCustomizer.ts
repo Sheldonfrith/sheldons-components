@@ -1,23 +1,18 @@
 import { twCascade } from '@mariusmarais/tailwind-cascade';
 import parseStyle from 'style-to-object';
 import {CSSProperties } from 'react';
-import {StyleOverride} from './typeHelpers';
-// export function parseCss(style: string | StyleOverride | undefined): CSSProperties{
-//     if (!style) return {};
-//     if (typeof style === 'string') return parseStyle(style)||{};
-//     else return (style && style.css)?parseStyle(style.css)||{}:{};
-// }
+import {StyleDefaults, StyleOverride, TwClasses} from './typeHelpers';
 
 
 export default class TailwindCustomizer {
-    private newStyle: string | string[] | null = null;
-    private defaultStyle: string | string[];
+    private newStyle: TwClasses | null = null;
+    private defaultStyle: TwClasses;
     private isPartial: boolean = false;
     private className: string | undefined;
     private removals: RegExp[] | undefined = undefined;
 
 
-    public constructor(className: string | undefined, defaultStyle: string, styleOverride?: StyleOverride ){
+    public constructor(className: string | undefined, defaultStyle: TwClasses, styleOverride?: StyleOverride ){
         this.defaultStyle = defaultStyle;
         this.className = className;
         if (styleOverride) {
@@ -46,7 +41,7 @@ export default class TailwindCustomizer {
         else return twCascade(...this.beforeTwCascade(this.newStyle), this.className);
     }
     private tailwindStringToArray(string: string | string[]): string[]{
-        if (Array.isArray(string)) {return string;}
+        if (Array.isArray(string)) {return this.splitArrayStringsBySpacesInPlace(string);}
         return string.split(/\s+/);
     }
     private tailwindArrayToString(arr: string[] | string): string{

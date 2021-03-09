@@ -4,11 +4,14 @@ export interface ReusableComponentBase {
     styles?: BaseStylesProp
 }
 export interface BaseStylesProp {
-    [componentName: string]: StyleOverride
-}
+    [componentName: string]: (StyleOverride | BaseStylesProp)
+};
 export interface StyleOverride {
     partial: boolean
     tailwind?: TwClasses
-    tailwindRemoveClasses?: TwClasses
+    tailwindRemovals?: RegExp[]
 }
-export type TwClasses = string | string[];
+export type TwClasses = string[];
+export interface StyleDefaults {
+    [componentKey: string]: TwClasses | StyleDefaults
+}

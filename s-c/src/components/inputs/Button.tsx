@@ -6,6 +6,9 @@ const DefaultCss = `w-full sm:w-32 mt-6 py-3 bg-gray-100 text-primary-500 rounde
 
 interface ButtonProps extends ReusableComponentBase{
     onClick: any,
+    styleChanges: {
+        [componentKey: string]: (currentClassNames: string[])=>any
+    }
 }
 const Button: React.FunctionComponent<ButtonProps> =({
     children, onClick, styles
