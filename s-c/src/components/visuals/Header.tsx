@@ -22,7 +22,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({ children, styles }) => {
 
   return (
     <div
-      className={classNames.getClassName('main')}
+      className={classNames.getString('main')}
     >
       {children}
     </div>

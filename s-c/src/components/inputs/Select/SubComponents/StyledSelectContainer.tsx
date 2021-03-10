@@ -24,7 +24,7 @@ const StyledSelectContainer: React.FunctionComponent<StyledSelectContainerProps>
 const classNames = useClassNameManager(styles, DefaultCss);
 
 return (
-<div ref={ref} className={classNames.getClassName('main')}>
+<div ref={ref} className={classNames.getString('main')}>
     {children}
 </div>
 );

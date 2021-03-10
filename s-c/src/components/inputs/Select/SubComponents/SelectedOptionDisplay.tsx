@@ -19,9 +19,9 @@ const SelectedOptionDisplay: React.FunctionComponent<SelectedOptionDisplayProps>
     styles, children, onClick
 })=> {
     const classNames = useClassNameManager(styles,DefaultCss);
-    console.log('got these classnames for selectedOptionDisplay',classNames.getClassName('main'))
+    //console.log('got these classnames for selectedOptionDisplay',classNames.getString('main'))
 return (
-<div className={classNames.getClassName('main')} onClick={onClick}>
+<div className={classNames.getString('main')} onClick={onClick}>
     {children}
 </div>
 );

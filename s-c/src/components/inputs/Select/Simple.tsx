@@ -48,7 +48,7 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
     <select
       value={value}
       onChange={handleChange}
-      className={classNames.getClassName('select')}
+      className={classNames.getString('select')}
       
     >
       {children
@@ -58,7 +58,7 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
               <option
                 key={option.id}
                 value={option.value}
-                className={classNames.getClassName('option')}
+                className={classNames.getString('option')}
                 
               >
                 {option.content}

@@ -13,6 +13,7 @@ import { Option, StyledSelectProps } from './index';
 import SelectedOptionDisplay from './SubComponents/SelectedOptionDisplay';
 import Container from './SubComponents/StyledSelectContainer';
 import useClassNameManager from '../../../lib/useClassNameManager';
+import { twParse } from '../../../lib/functionHelpers';
 
 const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
   children,
@@ -25,8 +26,14 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
 
   const classNames = useClassNameManager(styles, undefined);
 
+  //whenever displayDropdown changes, update the injected styles
+  useEffect(()=>{
+    if (displayDropdown) {classNames.inject('SelectedOptionDisplay.main',twParse`rounded-b-none`); return;}
+    classNames.removeInjection('SelectedOptionDisplay.main',twParse`rounded-b-none`);
+  },[displayDropdown, classNames]);
+
   function handleItemClick(option: Option) {
-    console.log('item clicked in StyledSelect', option);
+    //console.log('item clicked in StyledSelect', option);
     onChange(option);
   }
   return (

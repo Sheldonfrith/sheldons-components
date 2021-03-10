@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { twParse } from '../../lib/functionHelpers';
-import TailwindCustomizer from '../../lib/StyleCustomizer';
 import { ReusableComponentBase, StyleOverride } from '../../lib/typeHelpers';
 import useClassNameManager from '../../lib/useClassNameManager';
 
@@ -19,12 +18,18 @@ const Button: React.FunctionComponent<ButtonProps> = ({
   onClick,
   styles,
 }) => {
-  const classNames = useClassNameManager(styles, DefaultCss);
+    useEffect(()=>{
+        //console.log('button mounting');
+    },[]);
+    useEffect(()=>{
+        //console.log('button has new props', styles);
+    },[styles]);
+  const tw = useClassNameManager(styles, DefaultCss);
 
   return (
-    <button className={classNames.getClassName('main')} onClick={onClick}>
-      {children}
-    </button>
+        <button className={tw.getString('main')} onClick={onClick}>
+          {children}
+        </button>
   );
 };
 export default Button;

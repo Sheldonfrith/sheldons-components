@@ -22,9 +22,9 @@ const ItemWithXToRemove: React.FunctionComponent<ItemWithXToRemoveProps> =({
     const classNames = useClassNameManager(styles, DefaultCss);
 
 return (
-<div onClick={onClick} className={classNames.getClassName('container')} >
-    <div className={classNames.getClassName('textContainer')}>{children}</div>
-    <div className={classNames.getClassName('icon')}></div>
+<div onClick={onClick} className={classNames.getString('container')} >
+    <div className={classNames.getString('textContainer')}>{children}</div>
+    <div className={classNames.getString('icon')}></div>
 </div>
 );
 }

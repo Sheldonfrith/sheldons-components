@@ -26,9 +26,9 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
   const classNames = useClassNameManager(styles,undefined)
   //whenever displayDropdown changes, update the injected styles
   useEffect(()=>{
-    if (!displayDropdown) classNames.add('SelectedOptionDisplay.main',twParse`bg-black`);
-    else classNames.remove('SelectedOptionDisplay.main',[/bg-black/]);
-  },[displayDropdown]);
+    if (displayDropdown) {classNames.inject('SelectedOptionDisplay.main',twParse`rounded-b-none`); return;}
+    classNames.removeInjection('SelectedOptionDisplay.main',twParse`rounded-b-none`);
+  },[displayDropdown, classNames]);
 
   function handleItemClick(option: Option) {
     if (selected?.find(o => o.value === option.value)) return;

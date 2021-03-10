@@ -21,7 +21,7 @@ const DropdownItem: React.FunctionComponent<DropdownItemProps> =({
     const classNames = useClassNameManager(styles, DefaultCss);
 
 return (
-<div onClick={onClick} className={classNames.getClassName('main')} >
+<div onClick={onClick} className={classNames.getString('main')} >
     {children}
 </div>
 );

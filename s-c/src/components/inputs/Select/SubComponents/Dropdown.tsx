@@ -19,7 +19,7 @@ const classNames = useClassNameManager(styles, DefaultCss);
 
 if (display){
 return (
-<div className={classNames.getClassName('main')}>
+<div className={classNames.getString('main')}>
     {children}
 </div>
 );

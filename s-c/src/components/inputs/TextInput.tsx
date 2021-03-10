@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { twParse } from '../../lib/functionHelpers';
-import TailwindCustomizer from '../../lib/StyleCustomizer';
 import {ReusableComponentBase, StyleOverride} from '../../lib/typeHelpers';
 import useClassNameManager from '../../lib/useClassNameManager';
 
@@ -36,7 +35,7 @@ const TextInput: React.FunctionComponent<TextInputProps> =({
     }
 
 return (
-<input className={classNames.getClassName('main')} 
+<input className={classNames.getString('main')} 
     {...getElementProps}    
 />
 );
