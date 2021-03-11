@@ -30,7 +30,7 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
   useEffect(()=>{
     if (displayDropdown) {classNames.inject('SelectedOptionDisplay.main',twParse`rounded-b-none`); return;}
     classNames.removeInjection('SelectedOptionDisplay.main',twParse`rounded-b-none`);
-  },[displayDropdown, classNames]);
+  },[displayDropdown]);
 
   function handleItemClick(option: Option) {
     //console.log('item clicked in StyledSelect', option);

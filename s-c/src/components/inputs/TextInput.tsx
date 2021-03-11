@@ -4,7 +4,9 @@ import {ReusableComponentBase, StyleOverride} from '../../lib/typeHelpers';
 import useClassNameManager from '../../lib/useClassNameManager';
 
 const DefaultCss = {
-    main: twParse`mt-6 first:mt-0 border-b-2 py-3 focus:outline-none font-medium transition duration-300 hocus:border-primary-500`
+    main: twParse`mt-6 first:mt-0 border-b-2 py-3 focus:outline-none font-medium transition duration-300 hocus:border-primary-500`,
+    label: twParse`
+    `,
 }
 
 interface TextInputProps extends ReusableComponentBase{
@@ -15,10 +17,12 @@ interface TextInputProps extends ReusableComponentBase{
     valueIsDefault?: boolean
     styles?: {
         main: StyleOverride
+        label: StyleOverride
     }
+    label?: string
 }
 const TextInput: React.FunctionComponent<TextInputProps> =({
-     type, onChange, value, placeholder, valueIsDefault, styles
+     type, onChange, value, placeholder, valueIsDefault, styles, label
 })=> {
     const classNames = useClassNameManager(styles, DefaultCss);
     function getElementProps (){
@@ -35,9 +39,12 @@ const TextInput: React.FunctionComponent<TextInputProps> =({
     }
 
 return (
+    <>
+{label?<label className={classNames.getString('label')} >{label}</label>:<></>}
 <input className={classNames.getString('main')} 
     {...getElementProps}    
 />
+</>
 );
 }
 export default TextInput;

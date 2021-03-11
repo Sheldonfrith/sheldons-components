@@ -46,7 +46,9 @@ export default function useClassNameManager(
     //console.log('calculated styles has changed', calculatedStyles);
   },[calculatedStyles]);
 
-  const getCName = useCallback(
+  const getCName = calculatedStyles?
+  (path:string)=>twCascade(_.get(defaults, path))
+  :useCallback(
     (path: string) => {
       const targetObject: object = _.get(calculatedStyles, path);
       //console.log('getting string classname for ', path, targetObject);
@@ -157,6 +159,10 @@ export default function useClassNameManager(
     removeExclusion: removeExclusion,
   };
 }
+
+
+
+
 
 class StylePropsCalculator {
   private calculatedStyles;

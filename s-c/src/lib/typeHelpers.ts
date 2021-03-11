@@ -2,6 +2,8 @@ import React, {DetailedHTMLProps, AllHTMLAttributes, useState} from 'react';
 
 export interface ReusableComponentBase {
     styles?: BaseStylesProp
+    id?: string
+    key?: any
 }
 export interface BaseStylesProp {
     [componentName: string]: (StyleOverride | BaseStylesProp)

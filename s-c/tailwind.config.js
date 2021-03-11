@@ -725,7 +725,7 @@ module.exports = {
         },
         '.s-flex-col': {
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: 'col',
           alignItems: 'center',
         },
       }

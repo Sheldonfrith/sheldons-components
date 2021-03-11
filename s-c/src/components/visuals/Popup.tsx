@@ -5,7 +5,9 @@ import useClassNameManager from '../../lib/useClassNameManager';
 import { twParse } from '../../lib/functionHelpers';
 
 const DefaultStyle = {
-    Card: twParse`absolute bg-red-200`
+    Card: {
+        main: twParse`absolute bg-red-200`,
+    }
 }
 interface PopupProps extends ReusableComponentBase{
 }

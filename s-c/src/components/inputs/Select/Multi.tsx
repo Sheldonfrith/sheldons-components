@@ -28,7 +28,7 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
   useEffect(()=>{
     if (displayDropdown) {classNames.inject('SelectedOptionDisplay.main',twParse`rounded-b-none`); return;}
     classNames.removeInjection('SelectedOptionDisplay.main',twParse`rounded-b-none`);
-  },[displayDropdown, classNames]);
+  },[displayDropdown]);
 
   function handleItemClick(option: Option) {
     if (selected?.find(o => o.value === option.value)) return;
@@ -55,7 +55,7 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
                 <ItemWithXToRemove
                   styles={classNames.getObj('ItemWithXToRemove')}
                   key={option.id}
-                  onClick={() => handleRemoveItem(option)}
+                  onClick={(e: React.MouseEvent) => {e.stopPropagation();handleRemoveItem(option);}}
                 >
                   {option.content}
                 </ItemWithXToRemove>

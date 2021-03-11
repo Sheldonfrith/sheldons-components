@@ -24,7 +24,8 @@ const ItemWithXToRemove: React.FunctionComponent<ItemWithXToRemoveProps> =({
 return (
 <div onClick={onClick} className={classNames.getString('container')} >
     <div className={classNames.getString('textContainer')}>{children}</div>
-    <div className={classNames.getString('icon')}></div>
+    <div className="gg-close">
+    </div>
 </div>
 );
 }

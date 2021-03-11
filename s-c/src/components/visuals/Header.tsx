@@ -11,7 +11,7 @@ import {twParse} from '../../lib/functionHelpers';
 import useClassNameManager from '../../lib/useClassNameManager';
 
 const DefaultCss: StyleDefaults = {
-    main: twParse`bg-dark`,
+    main: twParse`bg-primary text-white s-flex-row`,
 };
 
 interface HeaderProps extends ReusableComponentBase {}
