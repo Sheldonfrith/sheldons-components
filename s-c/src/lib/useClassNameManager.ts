@@ -21,49 +21,57 @@ export default function useClassNameManager(
   defaults?: StyleDefaults
 ) {
   //console.log('running hook (rerender) with defaults ', defaults);
-  const [internalOverrides, setInternalOverrides]  = useState<BaseStylesProp>({
-      none: {partial: true},
-  })
+  const [internalOverrides, setInternalOverrides] = useState<BaseStylesProp>({
+    none: { partial: true },
+  });
   const [calculatedStyles, setCalculatedStyles] = useState<BaseStylesProp>({
     none: { partial: true },
   }); //! do not use setCalculatedStyles outside of the manager class
 
   //un props or defaults or overrides change... combine the props with defaults and overrides to get calclulated styles
   useEffect(() => {
-      
+    // console.log('change in styles prop, defaults, or internal overrides');
     const initCalculator = new StylePropsCalculator(
-        stylesProp || { none: { partial: true } },
-        defaults || { none: [''] }
-      );
+      stylesProp || { none: { partial: true } },
+      defaults || { none: [''] }
+    );
     const propsPlusDefaults = initCalculator.get();
     const combiner = new StyleOverrideCombiner();
-    const plusOverrides = combiner.combineStyles(propsPlusDefaults, internalOverrides);
+    const plusOverrides = combiner.combineStyles(
+      propsPlusDefaults,
+      internalOverrides
+    );
+    // console.log(
+    //   'before and after internal overrides applied: ',
+    //   propsPlusDefaults,
+    //   plusOverrides
+    // );
     setCalculatedStyles(plusOverrides);
   }, [stylesProp, defaults, internalOverrides, setCalculatedStyles]);
 
   //on calculatedStyles change
-  useEffect(()=>{
-    //console.log('calculated styles has changed', calculatedStyles);
-  },[calculatedStyles]);
+  useEffect(() => {
+    // console.log('calculated styles has changed', calculatedStyles);
+  }, [calculatedStyles]);
 
-  const getCName = calculatedStyles?
-  (path:string)=>twCascade(_.get(defaults, path))
-  :useCallback(
+  const getCName = useCallback(
     (path: string) => {
-      const targetObject: object = _.get(calculatedStyles, path);
+    //   console.log('getting fresh className for ', path);
+      if (!calculatedStyles) return twCascade(_.get(defaults, path)); //always return defaults if no props or overrides
+      const componentStyles: object = _.get(calculatedStyles, path);
       //console.log('getting string classname for ', path, targetObject);
-      if (!targetObject) return '';
-      const isStyleOverrideObj = Object.keys(targetObject).includes('partial');
+      if (!componentStyles) return twCascade(_.get(defaults,path));
+      const isStyleOverrideObj = Object.keys(componentStyles).includes('partial');
       if (!isStyleOverrideObj)
         throw new Error(
           'invalid object given to getClassName in ClassNamesManager'
         );
       const nameCalculator = new ClassNameCalculator(
-        targetObject as StyleOverride
+        componentStyles as StyleOverride
       );
       return nameCalculator.getString();
     },
-    [calculatedStyles]
+    [calculatedStyles, defaults]
   );
   const getObj = useCallback(
     (path: string): any => {
@@ -75,8 +83,8 @@ export default function useClassNameManager(
         throw new Error(
           'cannot use "getObj" method to get the styles for node(html element), only use this method for getting styles prop for React component'
         );
-    //console.log('successfully got object', target);
-      return {...target};
+      //console.log('successfully got object', target);
+      return { ...target };
     },
     [calculatedStyles]
   );
@@ -124,9 +132,10 @@ export default function useClassNameManager(
       setInternalOverrides(prev => {
         const n = { ...prev };
         const existingObj = _.get(n, `${path}`);
-        if (!existingObj || existingObj['partial'] === undefined) _.set(n, `${path}.partial`, true); //handle initialization of this path
+        if (!existingObj || existingObj['partial'] === undefined)
+          _.set(n, `${path}.partial`, true); //handle initialization of this path
         _.update(n, `${path}.tailwind`, function(classList: TwClasses) {
-          //console.log('updating ', path, ' with ', classList, classesToAdd);
+        //   console.log('updating ', path, ' with ', classList, classesToAdd);
           if (!classList) return [...classesToAdd];
           return [...classList, ...classesToAdd];
         });
@@ -135,6 +144,7 @@ export default function useClassNameManager(
     },
     [setInternalOverrides]
   );
+  
   const removeInsertion = useCallback(
     (path: string, classesToRemove: TwClasses) => {
       setInternalOverrides(prev => {
@@ -148,21 +158,21 @@ export default function useClassNameManager(
     },
     [setInternalOverrides]
   );
-
+  const switchInsertion = useCallback((path: string, additions: TwClasses, removals: TwClasses)=>{
+    removeInsertion(path, removals);
+    addInsertion(path, additions);
+  },[addInsertion, removeInsertion]);
   return {
     getString: getCName,
     getObj: getObj,
     partial: partial,
     inject: addInsertion,
     removeInjection: removeInsertion,
+    switchInjection: switchInsertion,
     exclude: addExclusion,
     removeExclusion: removeExclusion,
   };
 }
-
-
-
-
 
 class StylePropsCalculator {
   private calculatedStyles;
@@ -218,32 +228,27 @@ class StyleOverrideCombiner {
     baseObj: BaseStylesProp,
     overrideObj: BaseStylesProp
   ): BaseStylesProp {
-    //console.log('combining styles', baseObj, overrideObj);
+    // console.log('combining styles', baseObj, overrideObj);
     const newObj = { ...baseObj };
     traverseObject(
       overrideObj,
       (key: string | number, value: any, path: string[], parent: object) => {
-        // //console.log('transversing with...',key,value,path);
         if (!value) return;
         const theseKeys = Object.keys(value);
         const isStyleOverrideObj = theseKeys.includes('partial');
         if (!isStyleOverrideObj) return;
         this.overridePartial(newObj, path, value.partial);
-        // //console.log('in object conversion transveral... got these keys', theseKeys);
         if (!value.partial) {
           //FULL OVERRIDE
-          //console.log('full override in traverseObject->combiner', path);
           _.set(newObj, [...path, 'tailwind'], value.tailwind);
           _.set(newObj, [...path, 'tailwindRemovals'], value.tailwindRemovals);
         } else {
-          //console.log('partial override in traverseObject->combiner', path);
           this.applyAndClearRemovals(_.get(newObj, path));
           this.overrideTailwind(newObj, path, value.tailwind);
           this.setTailwindRemovals(newObj, path, value.tailwindRemovals);
         }
       }
     );
-    //console.log('done combining styles, ', newObj);
     return newObj;
   }
   private overridePartial(
@@ -297,10 +302,12 @@ class ClassNameCalculator {
   }
   public getString() {
     if (!this.obj) return '';
+    // console.log('getting string in class name calculator with ', this.obj);
     //apply removals to classnames
     const classNamesList = this.obj.tailwindRemovals
       ? this.getFilteredClassNames()
       : this.obj.tailwind;
+    //   console.log('about to give this list to twCascade:',classNamesList);
     //use twcascade to get the classname
     return twCascade(classNamesList);
   }

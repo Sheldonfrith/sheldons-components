@@ -101,6 +101,9 @@ module.exports = {
     spacing: {
       px: '1px',
       '0': '0',
+      '0.25':'0.178rem',
+      '0.5': '0.238rem',
+      '0.75': '0.317rem',
       '1': '0.422rem',
       '2': '0.563rem',
       '3': '0.75rem',
@@ -269,11 +272,11 @@ module.exports = {
       full: '100%',
       screen: '100vh',
     }),
-    inset: {
-      '0': '0',
-      '1/2': '50%',
-      auto: 'auto',
-    },
+    // inset: {
+    //   '0': '0',
+    //   '1/2': '50%',
+    //   auto: 'auto',
+    // },
     letterSpacing: {
       tighter: '-0.05em',
       tight: '-0.025em',
@@ -340,17 +343,17 @@ module.exports = {
       full: '100%',
       ...theme('spacing'),
     }),
-    objectPosition: {
-      bottom: 'bottom',
-      center: 'center',
-      left: 'left',
-      'left-bottom': 'left bottom',
-      'left-top': 'left top',
-      right: 'right',
-      'right-bottom': 'right bottom',
-      'right-top': 'right top',
-      top: 'top',
-    }, 
+    // objectPosition: {
+    //   bottom: 'bottom',
+    //   center: 'center',
+    //   left: 'left',
+    //   'left-bottom': 'left bottom',
+    //   'left-top': 'left top',
+    //   right: 'right',
+    //   'right-bottom': 'right bottom',
+    //   'right-top': 'right top',
+    //   top: 'top',
+    // }, 
     opacity: {
       '0': '0',
       '5': '0.05',
@@ -725,7 +728,7 @@ module.exports = {
         },
         '.s-flex-col': {
           display: 'flex',
-          flexDirection: 'col',
+          flexDirection: 'column',
           alignItems: 'center',
         },
       }

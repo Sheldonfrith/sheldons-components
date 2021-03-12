@@ -16,8 +16,8 @@ const DefaultTw = {
 
 interface SliderProps extends ReusableComponentBase {
     step?: number
-    min: number
-    max:number
+    min?: number
+    max?:number
     onChange: React.ChangeEventHandler
     value: number
     label?: string
@@ -28,7 +28,7 @@ interface SliderProps extends ReusableComponentBase {
 }
 
 const Slider: React.FunctionComponent<SliderProps> = ({ 
-    children, styles ,max, min, step, onChange, value,label
+    children, styles ,max=100, min=0, step=1, onChange, value,label
 }) => {
   const classNames = useClassNameManager(styles, DefaultTw);
 
@@ -36,7 +36,7 @@ const Slider: React.FunctionComponent<SliderProps> = ({
   return (
       <>
       {label?<label className={classNames.getString('label')}>{label}</label>:<></>}
-    <input value={value} onChange={onChange} max={max} min={min} step={step||1} type="range" className={classNames.getString('main')} />
+    <input value={value} onChange={onChange} max={max} min={min} step={step} type="range" className={classNames.getString('main')} />
     </>
   );
 };

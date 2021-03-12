@@ -5,7 +5,7 @@ import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelper
 import useClassNameManager from '../../../../lib/useClassNameManager';
 
 const DefaultCss = {
-    main: twParse`text-4 `
+    main: twParse`relative text-4 w-14 p-0 m-4`
 }
 
 

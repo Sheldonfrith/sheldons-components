@@ -9,11 +9,11 @@ export type Option = {
     value: string;
     content: any;
   };
-export enum SelectTypes {
-    Simple = "simple",
-    Multi = "multi",
-    Styled = "styled"
-}
+export type SelectTypes = (
+    "simple" |
+    "multi" |
+    "styled"
+);
 
 interface BaseSelectProps extends ReusableComponentBase{
     options: Option[]
@@ -23,15 +23,15 @@ interface SingleSelectBaseProps extends BaseSelectProps{
     onChange: (newOption: Option | undefined) => any;
 }
 export interface SimpleSelectProps extends SingleSelectBaseProps{
-    type: SelectTypes.Simple
-    styles:{
+    type: 'simple'
+    styles?:{
         select: StyleOverride   
         option: StyleOverride
     }
 }
 export interface StyledSelectProps extends SingleSelectBaseProps{
-    type: SelectTypes.Styled
-    styles: {
+    type: 'styled'
+    styles?: {
         Container: StyleOverride
         SelectedOptionDisplay: {
             main: StyleOverride},
@@ -42,10 +42,10 @@ export interface StyledSelectProps extends SingleSelectBaseProps{
     }
 }
 export interface MultiSelectProps extends BaseSelectProps{
-    type: SelectTypes.Multi
+    type: 'multi'
     selected: Option[] | undefined | null
     onChange: (newOptions: Option[]| undefined)=>any;
-    styles: {
+    styles?: {
         Container: StyleOverride
         SelectedOptionDisplay: {
             main: StyleOverride}
@@ -67,9 +67,9 @@ type SelectProps = SimpleSelectProps | MultiSelectProps | StyledSelectProps;
 
 const Select: React.FunctionComponent<SelectProps> =(props)=> {
     switch(props.type){
-        case SelectTypes.Multi:
+        case 'multi':
             return <MultiSelect {...props}>{props.children}</MultiSelect>
-        case SelectTypes.Styled:
+        case 'styled':
             return <StyledSelect {...props}>{props.children}</StyledSelect>
         default:
             return <SimpleSelect {...props}>{props.children}</SimpleSelect>

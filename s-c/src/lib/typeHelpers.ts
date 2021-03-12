@@ -4,6 +4,7 @@ export interface ReusableComponentBase {
     styles?: BaseStylesProp
     id?: string
     key?: any
+    name?: string
 }
 export interface BaseStylesProp {
     [componentName: string]: (StyleOverride | BaseStylesProp)

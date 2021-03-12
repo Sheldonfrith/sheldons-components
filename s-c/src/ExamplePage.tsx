@@ -1,0 +1,120 @@
+import React, {FormEvent, useEffect, useState} from 'react';
+import { Option } from './components/inputs/Select';
+import Slider from './components/inputs/Silder';
+import {Button,Header, TextInput, Select,Popup, Card} from './index';
+
+interface ExamplePageProps {
+
+}
+
+const ExamplePage: React.FunctionComponent<ExamplePageProps> = props => {
+    const [popContent, setPopContent] = useState('none defined');
+    const [showPop, setShowPop] = useState(false);
+    const [selectedSingle, setSelectedSingle] = useState<Option|null|undefined>(null);
+    const [selectedMulti, setSelectedMulti] = useState<Option[]|null|undefined>(null);
+
+    function onSingleChange(option: Option|undefined){
+        setSelectedSingle(option);
+    }
+
+    function onMultiChange(options: Option[]|undefined){
+        setSelectedMulti(options);
+    }
+    useEffect(()=>{
+        console.log('pop content:',popContent);
+    },[popContent]);
+
+    function popupSubmit(e:any) {
+      e.preventDefault();
+      setShowPop(prev => !prev);
+    }
+
+    function inputIsValid(input:string){
+        return input?(input.length >3):undefined;
+    }
+
+    const selectOptions: Option[] = [
+        {id:1,
+        value:'Option 1',
+        content: 'Option 1'},
+        {id: 2,
+        value: 'Option 2',
+        content: 'option 2'},
+    ];
+    return (
+      <>
+        {/* <AppContainer> */}
+        <Header
+          title="Sheldon Frith"
+          subTitle='Example webpage built using "sheldons-components"'
+          nav={
+            <>
+              <Button variant={'action'} onClick={() => {}}>
+                These
+              </Button>
+              <Button variant={'info'} onClick={() => {}}>
+                Are Some
+              </Button>
+              <Button onClick={() => {}}>Buttons</Button>
+            </>
+          }
+        ></Header>
+        {showPop ? <Popup onClose={()=>setShowPop(false)}>{popContent}</Popup> : <></>}
+        <Card>
+          <form onSubmit={popupSubmit}>
+            <h2>Show Popup With Content...</h2>
+            <TextInput
+              id={'content'}
+              name={'content'}
+              label="Popup Content"
+              onChange={(e)=>setPopContent(e.target.value)}
+              value={popContent}
+              validInput={inputIsValid(popContent)}
+            ></TextInput>
+            <Button submit>Submit</Button>
+          </form>
+        </Card>
+        <Card>
+          <form onSubmit={(e)=>e.preventDefault()}>
+            <h2>Advanced Form</h2>
+            <Card>
+              <TextInput value={'not editable'}></TextInput>
+              <Slider value={0} onChange={()=>{}} ></Slider>
+              <Select options={selectOptions} selected={selectedMulti} onChange={onMultiChange} type={'multi'}></Select>
+              <Select options={selectOptions} selected={selectedSingle} onChange={onSingleChange} type={'styled'}></Select>
+              {/* <Radio></Radio> */}
+              {/* <Checkboxes></Checkboxes> */}
+            </Card>
+            <Card>{/* <Table></Table> */}</Card>
+            <Button submit>Submit</Button>
+          </form>
+        </Card>
+        <Card>
+          <h1>Prose, H1</h1>
+          <p>
+            This is some p text, <span>with a span.</span>
+            and a <a>Link</a>. Here is <b>some bold text</b>. Here is{' '}
+            <del>some deleted text</del>. Here is <em>some em text</em>. Here is{' '}
+            <i>some italic text</i>.
+          </p>
+          <h3>Heading 3</h3>
+          <p> more p text</p>
+          <h4> Heading 4 </h4>
+          <code>This is a code section</code>
+          <q> Inline quotation</q>
+          <h5> Heading 5</h5>
+          <blockquote>This is a long quote</blockquote>
+          <h6> Heading 6 </h6>
+          <details>This is a details section.</details>
+          <ol>
+            <li>this is an </li>
+            <li> ordered</li>
+            <li>List</li>
+          </ol>
+        </Card>
+  
+        {/* </AppContainer> */}
+      </>
+    );
+  };
+  export default ExamplePage;

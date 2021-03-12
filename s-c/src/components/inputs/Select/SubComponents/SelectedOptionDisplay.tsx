@@ -4,7 +4,16 @@ import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelper
 import useClassNameManager from '../../../../lib/useClassNameManager';
 
 const DefaultCss = {
-    main: twParse`w-auto elevation-1 cursor-pointer overflow-hidden flex-nowrap h-8 bg-white p-3 s-flex-row space-x-3`
+    main: twParse`w-full 
+    elevation-1 
+    cursor-pointer 
+    overflow-hidden 
+    flex-nowrap 
+    h-8 
+    bg-white 
+    p-3
+    s-flex-row 
+    space-x-3`
 };
 
 export type SelectedOptionDisplayStyles = {

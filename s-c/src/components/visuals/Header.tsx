@@ -6,25 +6,100 @@ import React, {
   useRef,
 } from 'react';
 
-import { ReusableComponentBase, StyleDefaults } from '../../lib/typeHelpers';
-import {twParse} from '../../lib/functionHelpers';
+import {
+  ReusableComponentBase,
+  StyleDefaults,
+  StyleOverride,
+} from '../../lib/typeHelpers';
+import { twParse } from '../../lib/functionHelpers';
 import useClassNameManager from '../../lib/useClassNameManager';
 
 const DefaultCss: StyleDefaults = {
-    main: twParse`bg-primary text-white s-flex-row`,
+  main: twParse`
+    bg-brown-600 
+    text-pink-300 
+    s-flex-row 
+    justify-between
+    w-full `,
+    logo: twParse`
+    s-flex-row
+    `,
+    titleArea: twParse`
+    w-15
+    flex
+    flex-col
+    items-start
+    `,
+    title: twParse`
+    uppercase
+    `,
+    subTitle: twParse`
+    italic
+    text-3
+    text-brown-100
+    `,
+  navArea: twParse`
+    s-flex-row
+    self-end
+    justify-end
+    w-16
+    flex-wrap
+    `,
 };
 
-interface HeaderProps extends ReusableComponentBase {}
+interface HeaderProps extends ReusableComponentBase {
+  title?: string;
+  subTitle?: string;
+  logo?: JSX.Element;
+  nav?: JSX.Element;
+  styles?: {
+    main: StyleOverride;
+    logo?: StyleOverride;
+    titleArea?: StyleOverride;
+    title?: StyleOverride;
+    subTitle?: StyleOverride;
+    navArea: StyleOverride;
+  };
+}
 
-const Header: React.FunctionComponent<HeaderProps> = ({ children, styles }) => {
-
+const Header: React.FunctionComponent<HeaderProps> = ({
+  children,
+  styles,
+  title,
+  subTitle,
+  logo,
+  nav,
+}) => {
   const classNames = useClassNameManager(styles, DefaultCss);
 
   return (
-    <div
-      className={classNames.getString('main')}
-    >
-      {children}
+    <div className={classNames.getString('main')}>
+      {logo ? (
+        <div className={classNames.getString('logo')}>{logo}</div>
+      ) : (
+        <></>
+      )}
+      {title || subTitle ? (
+        <div className={classNames.getString('titleArea')}>
+          {title ? (
+            <h1 className={classNames.getString('title')}>{title}</h1>
+          ) : (
+            <></>
+          )}
+          {subTitle ? (
+            <h3 className={classNames.getString('subTitle')}>{subTitle}</h3>
+          ) : (
+            <></>
+          )}
+        </div>
+      ) : (
+        <></>
+      )}
+      {nav ? (
+        <div className={classNames.getString('navArea')}>{nav}</div>
+      ) : (
+        <>{children}</>
+      )}
     </div>
   );
 };

@@ -5,49 +5,80 @@ import useClassNameManager from '../../lib/useClassNameManager';
 
 const DefaultCss = {
   main: twParse`
-  w-full 
-  bg-secondary
-  text-primary 
+  min-w-10 
+  bg-brown-100
+  text-pink-500 
   rounded 
   font-bold 
   tracking-wide 
   elevation-1 
   uppercase 
-  text-sm 
   transition 
   duration-300 
   transform 
   focus:outline-none 
   focus:shadow-outline 
-  hover:bg-brown-200
+  hover:bg-red-200
   hover:text-red-500 
   hocus:-translate-y-px 
   hocus:shadow-xl`,
 };
 
+type VariantColor = {
+  bg?: string;
+  text?: string;
+  hoverBg?: string;
+  hoverText?: string;
+};
+const variantToColorMap: { [variant: string]: VariantColor } = {
+  action: { bg: 'pink-500', text: 'white', hoverBg: 'pink-400', hoverText: 'white' },
+  info: { bg: 'blue-500', text: 'white', hoverBg: 'blue-400' , hoverText: 'white'},
+  danger: { bg: 'red-500', text: 'white', hoverBg: 'red-400' ,  hoverText: 'white'},
+  success: { bg: 'green-500', text: 'white', hoverBg: 'green-400' , hoverText: 'white'},
+};
+
 interface ButtonProps extends ReusableComponentBase {
-  onClick: any;
+  onClick?: any;
   styles?: {
     main: StyleOverride;
   };
+  variant?: 'action' | 'info' | 'danger' | 'success';
+  submit?: boolean
 }
 const Button: React.FunctionComponent<ButtonProps> = ({
   children,
   onClick,
   styles,
+  variant,
+  submit
 }) => {
-    useEffect(()=>{
-        //console.log('button mounting');
-    },[]);
-    useEffect(()=>{
-        //console.log('button has new props', styles);
-    },[styles]);
+  useEffect(() => {
+    //console.log('button mounting');
+  }, []);
+  useEffect(() => {
+    //console.log('button has new props', styles);
+  }, [styles]);
   const tw = useClassNameManager(styles, DefaultCss);
 
+  useEffect(() => {
+    if (!variant) return;
+    const colors = variantToColorMap[variant];
+    tw.inject('main', [
+      colors.bg ? `bg-${colors.bg}` : '',
+      colors.text ? `text-${colors.text}` : '',
+      colors.hoverBg ? `hover:bg-${colors.hoverBg}` : '',
+      colors.hoverText ? `hover:text-${colors.hoverText}` : '',
+    ]);
+  }, [variant]);
+
   return (
-        <button className={tw.getString('main')} onClick={onClick}>
-          {children}
-        </button>
+    <button 
+    className={tw.getString('main')} 
+    onClick={submit?onClick:()=>{}}
+    type={submit?'submit':'button'}
+    >
+      {children}
+    </button>
   );
 };
 export default Button;

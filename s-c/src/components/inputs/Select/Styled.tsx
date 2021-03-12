@@ -59,6 +59,7 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
                   styles={classNames.getObj('DropdownItem')}
                   key={option.id}
                   onClick={() => {
+                    setDisplayDropdown(false);
                     handleItemClick(option);
                   }}
                   isSelected={selected === option}

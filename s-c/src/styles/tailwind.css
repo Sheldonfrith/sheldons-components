@@ -3,47 +3,82 @@
 @tailwind utilities;
 
 @layer base {
-    html{
-        @apply text-4 text-primary; 
-        font-size: 20px;
-    }
-    div, button, select, input, section {
-        @apply rounded-default;
-    }
-    input, select {
-        @apply bg-white;
-    }
-    button, select, input, a {
-        @apply cursor-pointer;
-    }
-    button, select, input {
-        @apply m-1 p-1;
-    }
-    body {
-        @apply bg-gradient-to-r from-pink-100 to-brown-200;
-    }
-    div {
-        @apply m-2 p-2 flex flex-col items-center justify-center;
-    }
-    h1 {
-        @apply text-7;
-    }
-    h2 {
-        @apply text-6;
-    }
-    h3 {
-        @apply text-5;
-    }
-    h4 {
-        @apply text-4;
-    }
-    h5 {
-        @apply text-3;
-    }
-    h6 {
-        @apply text-2;
-    }
-    p {
-        @apply text-2;
-    }
+  html {
+    @apply text-4 text-primary;
+    font-size: 20px;
+  }
+  div,
+  button,
+  select,
+  input,
+  textarea,
+  section {
+    @apply rounded-default;
+  }
+  input,
+  textarea,
+  select {
+    @apply bg-white border-0;
+  }
+
+  [type='text'],
+  [type='email'],
+  [type='url'],
+  [type='password'],
+  [type='number'],
+  [type='date'],
+  [type='datetime-local'],
+  [type='month'],
+  [type='search'],
+  [type='tel'],
+  [type='time'],
+  [type='week'],
+  [multiple],
+  textarea,
+  select {
+    @apply border-0 rounded-default bg-white;
+
+  }
+
+
+  button,
+  select,
+  textarea,
+  input,
+  a {
+    @apply cursor-pointer;
+  }
+  button,
+  select,
+  input,
+  textarea {
+    @apply m-1 p-1;
+  }
+  body {
+    @apply bg-gradient-to-r from-pink-100 to-brown-200;
+  }
+  div {
+    @apply m-2 p-2 flex flex-col items-center justify-center;
+  }
+  h1 {
+    @apply text-7;
+  }
+  h2 {
+    @apply text-6;
+  }
+  h3 {
+    @apply text-5;
+  }
+  h4 {
+    @apply text-4;
+  }
+  h5 {
+    @apply text-3;
+  }
+  h6 {
+    @apply text-2;
+  }
+  p {
+    @apply text-2;
+  }
 }

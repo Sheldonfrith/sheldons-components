@@ -4,7 +4,7 @@ import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelper
 import useClassNameManager from '../../../../lib/useClassNameManager';
 
 const DefaultCss = {
-    main: twParse`cursor-pointer`
+    main: twParse`w-full cursor-pointer`
 }
 
 

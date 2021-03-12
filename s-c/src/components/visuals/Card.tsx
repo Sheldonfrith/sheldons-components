@@ -12,7 +12,9 @@ const DefaultCss = {
     relative
     text-gray-900
     bg-white
-    s-flex-col`,
+    s-flex-col
+    
+    `
 };
 
 interface CardProps extends ReusableComponentBase {}
