@@ -1,7 +1,9 @@
 import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react';
+import AppWrapper from './components/AppWrapper';
+import GeneralInput from './components/inputs/GeneralInput';
 import { Option } from './components/inputs/Select';
 import Slider from './components/inputs/Silder';
-import {Button,Header, TextInput, Select,Popup, Card} from './index';
+import {Button,Header,  Select,Popup, Card} from './index';
 
 interface ExamplePageProps {
 
@@ -43,9 +45,15 @@ const ExamplePage: React.FunctionComponent<ExamplePageProps> = props => {
         {id: 2,
         value: 'Option 2',
         content: 'option 2'},
+        {id: 3,
+        value: 'option 3',
+      content: 'Option 3'},
+      {id: 4,
+        value: 'option 4',
+        content: 'Option 4'}
     ];
     return (
-      <>
+      <AppWrapper>
         {/* <AppContainer> */}
         <Header
           title="Sheldon Frith"
@@ -66,15 +74,15 @@ const ExamplePage: React.FunctionComponent<ExamplePageProps> = props => {
         <Card>
           <form onSubmit={popupSubmit}>
             <h2>Show Popup With Content...</h2>
-            <TextInput
+            <GeneralInput
               id={'content'}
               name={'content'}
               label="Popup Content"
-              onChange={(e)=>setPopContent(e.target.value)}
+              onChange={(e:any)=>setPopContent(e.target.value)}
               value={popContent}
               validInput={inputIsValid(popContent)}
               invalidMessage="Must be longer than 3 characters."
-            ></TextInput>
+            ></GeneralInput>
             <Button submit>Submit</Button>
           </form>
         </Card>
@@ -82,14 +90,46 @@ const ExamplePage: React.FunctionComponent<ExamplePageProps> = props => {
           <form onSubmit={(e)=>e.preventDefault()}>
             <h2>Advanced Form</h2>
             <Card>
-              <TextInput 
+              <GeneralInput
               value={inputVal||''}
-              onChange={(e)=>setInputVal(e.target.value)}
+              onChange={(e:any)=>setInputVal(e.target.value)}
               placeholder={'Enter text here'}
               validInput={inputIsValid(inputVal)}
               invalidMessage="Must be longer than 3 characters"
-              ></TextInput>
-              <Slider value={rangeVal} min={0} max={100} onChange={(e)=>{setRangeVal(e.target.value)}} ></Slider>
+              ></GeneralInput>
+              <Slider 
+              value={rangeVal} 
+              min={0} 
+              max={100} 
+              onChange={(e)=>{
+                setRangeVal(e.target.value)}} 
+              label={'Pick A Value:'}
+              showExactValue
+              ></Slider>
+              <Slider 
+              value={rangeVal} 
+              min={0} 
+              max={100} 
+              onChange={(e)=>{
+                setRangeVal(e.target.value)}} 
+              label={'Pick A Value:'}
+              directInput
+              ></Slider>
+              <Slider 
+              value={rangeVal} 
+              min={0} 
+              max={100} 
+              onChange={(e)=>{
+                setRangeVal(e.target.value)}} 
+              label={'Pick A Value:'}
+              ></Slider>
+              <Slider 
+              value={rangeVal} 
+              min={0} 
+              max={100} 
+              onChange={(e)=>{
+                setRangeVal(e.target.value)}} 
+              ></Slider>
               <Select options={selectOptions} selected={selectedMulti} onChange={onMultiChange} type={'multi'}></Select>
               <Select options={selectOptions} selected={selectedSingle} onChange={onSingleChange} type={'styled'}></Select>
               {/* <Radio></Radio> */}
@@ -124,7 +164,7 @@ const ExamplePage: React.FunctionComponent<ExamplePageProps> = props => {
         </Card>
   
         {/* </AppContainer> */}
-      </>
+      </AppWrapper>
     );
   };
   export default ExamplePage;

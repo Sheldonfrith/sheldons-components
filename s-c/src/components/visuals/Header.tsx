@@ -16,7 +16,7 @@ import useClassNameManager from '../../lib/useClassNameManager';
 
 const DefaultCss: StyleDefaults = {
   main: twParse`
-    bg-brown-600 
+    bg-orange-600 
     text-pink-300 
     s-flex-row 
     justify-between
@@ -36,7 +36,7 @@ const DefaultCss: StyleDefaults = {
     subTitle: twParse`
     italic
     text-3
-    text-brown-100
+    text-orange-100
     `,
   navArea: twParse`
     s-flex-row

@@ -5,7 +5,15 @@ import useClassNameManager from '../../../../lib/useClassNameManager';
 
 
 const DefaultCss = {
-    main: twParse`z-20 absolute top-3/4 w-14 bg-secondary elevation-1 p-3 rounded-t-none`
+    main: twParse`
+    z-20 
+    absolute 
+    top-3/4 
+    w-14 
+    bg-white 
+    elevation-1 
+    p-3 
+    rounded-t-none`
 }
 
 interface DropdownProps extends ReusableComponentBase{

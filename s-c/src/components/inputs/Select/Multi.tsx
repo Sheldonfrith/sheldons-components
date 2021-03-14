@@ -15,6 +15,13 @@ import Container from './SubComponents/StyledSelectContainer';
 import {twParse}from '../../../lib/functionHelpers';
 import useClassNameManager from '../../../lib/useClassNameManager';
 
+const DefaultTw = {
+  SelectedOptionDisplay: {
+    main: twParse`overflow-x-scroll`
+  }
+};
+
+
 const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
   children,
   options,
@@ -23,7 +30,7 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
   styles,
 }) => {
   const [displayDropdown, setDisplayDropdown] = useState<boolean>(false);
-  const classNames = useClassNameManager(styles,undefined)
+  const classNames = useClassNameManager(styles,DefaultTw);
   //whenever displayDropdown changes, update the injected styles
   useEffect(()=>{
     if (displayDropdown) {classNames.inject('SelectedOptionDisplay.main',twParse`rounded-b-none`); return;}

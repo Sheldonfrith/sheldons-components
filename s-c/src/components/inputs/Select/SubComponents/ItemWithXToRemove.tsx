@@ -4,8 +4,17 @@ import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelper
 import useClassNameManager from '../../../../lib/useClassNameManager';
 
 const DefaultCss = {
-    container: twParse`cursor-pointer bg-secondary max-h-100 s-flex-row p-2 space-x-2`,
-    icon: twParse`bg-danger w-2 h-2 m-x-2`
+    container: twParse`
+    cursor-pointer 
+    bg-secondary 
+    max-h-full
+    s-flex-row 
+    p-2 
+    space-x-2`,
+    icon: twParse`bg-danger w-2 h-2 m-x-2`,
+    textContainer: twParse`
+        flex-shrink-0
+    `,
 };
 
 interface ItemWithXToRemoveProps extends ReusableComponentBase{

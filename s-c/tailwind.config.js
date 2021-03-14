@@ -79,7 +79,7 @@ module.exports = {
         "600": "#3b3533",
         "DEFAULT": "#5f5552"
       },
-      "brown": {
+      "orange": {
         "100": "#f7f4f3",
         "200": "#e7dedb",
         "300": "#cbb8b1",
@@ -682,6 +682,7 @@ module.exports = {
     resize: ['responsive'],
     stroke: ['responsive'],
     strokeWidth: ['responsive'],
+    
     tableLayout: ['responsive'],
     textAlign: ['responsive'],
     textColor: ['responsive', 'hover', 'focus'],
@@ -721,6 +722,7 @@ module.exports = {
     require('@tailwindcss/aspect-ratio'),
     require('tailwindcss-elevation')(['responsive']),
     require('tailwindcss-gradients'),
+    require('./src/custom-tailwind-scrollbar'),
     plugin(function({ addUtilities }) {
       const newUtilities = {
         '.s-flex-row': {
@@ -734,9 +736,10 @@ module.exports = {
           alignItems: 'center',
         },
       }
-
+ 
       addUtilities(newUtilities, ['responsive', 'hover'])
     }),
     
   ],
+ 
 }

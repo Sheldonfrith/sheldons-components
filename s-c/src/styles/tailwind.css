@@ -4,6 +4,8 @@
 
 @layer base {
 
+  
+
   input[type=range] {
     -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
     width: 100%; /* Specific width is required for Firefox. */
@@ -65,6 +67,13 @@
 
   }
 
+  div::-webkit-scrollbar-thumb{
+      @apply rounded-full;
+  }
+  div::-webkit-scrollbar-track{
+    @apply rounded-full
+  }
+  
 
   button,
   select,
@@ -80,10 +89,10 @@
     @apply m-1 p-1;
   }
   body {
-    @apply bg-gradient-to-r from-pink-100 to-brown-200;
+    @apply bg-gradient-to-r from-pink-100 to-orange-200;
   }
   div {
-    @apply m-2 p-2 flex flex-col items-center justify-center;
+    @apply m-2 p-2;
   }
   button {
     @apply rounded-full px-5;
