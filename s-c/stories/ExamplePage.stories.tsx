@@ -1,6 +1,6 @@
 import React, {FormEvent, useState} from 'react';
 import { Meta, Story } from '@storybook/react';
-import {ExamplePage} from '../src';
+import {ExamplePage} from '../src/index';
 
 const meta: Meta = {
   title: 'ExamplePage',

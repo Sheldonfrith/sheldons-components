@@ -101,6 +101,7 @@ module.exports = {
     spacing: {
       px: '1px',
       '0': '0',
+      '0.1':'0.1rem',
       '0.25':'0.178rem',
       '0.5': '0.238rem',
       '0.75': '0.317rem',
@@ -181,6 +182,7 @@ module.exports = {
       wait: 'wait',
       text: 'text',
       move: 'move',
+      grab: 'grab',
       'not-allowed': 'not-allowed',
       'col-resize': 'col-resize',
     },

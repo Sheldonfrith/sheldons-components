@@ -31,10 +31,10 @@ type VariantColor = {
   hoverText?: string;
 };
 const variantToColorMap: { [variant: string]: VariantColor } = {
-  action: { bg: 'pink-500', text: 'white', hoverBg: 'pink-400', hoverText: 'white' },
-  info: { bg: 'blue-500', text: 'white', hoverBg: 'blue-400' , hoverText: 'white'},
-  danger: { bg: 'red-500', text: 'white', hoverBg: 'red-400' ,  hoverText: 'white'},
-  success: { bg: 'green-500', text: 'white', hoverBg: 'green-400' , hoverText: 'white'},
+  action: { bg: 'pink-500', text: 'white', hoverBg: 'pink-600', hoverText: 'white' },
+  info: { bg: 'blue-500', text: 'white', hoverBg: 'blue-600' , hoverText: 'white'},
+  danger: { bg: 'red-500', text: 'white', hoverBg: 'red-600' ,  hoverText: 'white'},
+  success: { bg: 'green-500', text: 'white', hoverBg: 'green-600' , hoverText: 'white'},
 };
 
 interface ButtonProps extends ReusableComponentBase {

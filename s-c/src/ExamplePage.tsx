@@ -1,4 +1,4 @@
-import React, {FormEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import { Option } from './components/inputs/Select';
 import Slider from './components/inputs/Silder';
 import {Button,Header, TextInput, Select,Popup, Card} from './index';
@@ -12,6 +12,8 @@ const ExamplePage: React.FunctionComponent<ExamplePageProps> = props => {
     const [showPop, setShowPop] = useState(false);
     const [selectedSingle, setSelectedSingle] = useState<Option|null|undefined>(null);
     const [selectedMulti, setSelectedMulti] = useState<Option[]|null|undefined>(null);
+  const [inputVal, setInputVal] = useState<string|null>(null);
+  const [rangeVal, setRangeVal]= useState<number>(50);
 
     function onSingleChange(option: Option|undefined){
         setSelectedSingle(option);
@@ -29,8 +31,9 @@ const ExamplePage: React.FunctionComponent<ExamplePageProps> = props => {
       setShowPop(prev => !prev);
     }
 
-    function inputIsValid(input:string){
-        return input?(input.length >3):undefined;
+    function inputIsValid(input:string|null){
+      if (!input) return undefined;
+      else return (input.length > 3);
     }
 
     const selectOptions: Option[] = [
@@ -70,6 +73,7 @@ const ExamplePage: React.FunctionComponent<ExamplePageProps> = props => {
               onChange={(e)=>setPopContent(e.target.value)}
               value={popContent}
               validInput={inputIsValid(popContent)}
+              invalidMessage="Must be longer than 3 characters."
             ></TextInput>
             <Button submit>Submit</Button>
           </form>
@@ -78,8 +82,14 @@ const ExamplePage: React.FunctionComponent<ExamplePageProps> = props => {
           <form onSubmit={(e)=>e.preventDefault()}>
             <h2>Advanced Form</h2>
             <Card>
-              <TextInput value={'not editable'}></TextInput>
-              <Slider value={0} onChange={()=>{}} ></Slider>
+              <TextInput 
+              value={inputVal||''}
+              onChange={(e)=>setInputVal(e.target.value)}
+              placeholder={'Enter text here'}
+              validInput={inputIsValid(inputVal)}
+              invalidMessage="Must be longer than 3 characters"
+              ></TextInput>
+              <Slider value={rangeVal} min={0} max={100} onChange={(e)=>{setRangeVal(e.target.value)}} ></Slider>
               <Select options={selectOptions} selected={selectedMulti} onChange={onMultiChange} type={'multi'}></Select>
               <Select options={selectOptions} selected={selectedSingle} onChange={onSingleChange} type={'styled'}></Select>
               {/* <Radio></Radio> */}
