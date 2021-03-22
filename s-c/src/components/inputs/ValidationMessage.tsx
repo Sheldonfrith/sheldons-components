@@ -14,7 +14,7 @@ const DefaultTw = {
     flex
     flex-row
     justify-start
-    align-center
+    items-center
     m-0
     p-0
     text-2

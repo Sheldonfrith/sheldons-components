@@ -21,6 +21,7 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
   onChange,
   styles,
   selected,
+  placeholder
 }) => {
   const [displayDropdown, setDisplayDropdown] = useState<boolean>(false);
 
@@ -45,7 +46,7 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
         onClick={() => setDisplayDropdown(prev => !prev)}
         styles={classNames.getObj('SelectedOptionDisplay')}
       >
-        {selected ? selected.content : 'Select an Option'}
+        {selected ? selected.content : placeholder || 'Select an Option'}
       </SelectedOptionDisplay>
       <Dropdown
         display={displayDropdown}
@@ -53,7 +54,7 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
       >
         {children
           ? children
-          : options.map((option: Option) => {
+          : options?options.map((option: Option) => {
               return (
                 <DropdownItem
                   styles={classNames.getObj('DropdownItem')}
@@ -67,7 +68,7 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
                   {option.content}
                 </DropdownItem>
               );
-            })}
+            }):<></>}
       </Dropdown>
     </Container>
   );

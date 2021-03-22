@@ -21,21 +21,22 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
   onChange,
   selected,
   styles,
+  placeholder,
 }) => {
   const [internalSelectedOption, setInternalSelectedOption] = useState(
     selected
   );
-  const [value, setValue] = useState<undefined | string>(undefined);
+  const [value, setValue] = useState<undefined | string|number>(undefined);
     const classNames = useClassNameManager(styles, DefaultCss);
   //whenever selected option or internal selected option change ,change value
   useEffect(() => {
     if (selected) setValue(selected.value);
     if (internalSelectedOption) setValue(internalSelectedOption.value);
-    setValue(undefined);
+    setValue(placeholder);
   }, [selected, internalSelectedOption]);
 
   function getOptionByValue(value: string) {
-    return options.find((option: Option) => option.value === value);
+    return options?.find((option: Option) => option.value === value);
   }
   function handleChange(e: ChangeEvent<HTMLSelectElement>) {
     const option = getOptionByValue(e.target.value);
@@ -49,11 +50,10 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
       value={value}
       onChange={handleChange}
       className={classNames.getString('select')}
-      
     >
       {children
         ? children
-        : options.map((option: Option) => {
+        : options? options.map((option: Option) => {
             return (
               <option
                 key={option.id}
@@ -64,7 +64,7 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
                 {option.content}
               </option>
             );
-          })}
+          }):<></>}
     </select>
   );
 };

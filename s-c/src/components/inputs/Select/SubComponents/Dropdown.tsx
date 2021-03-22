@@ -12,7 +12,8 @@ const DefaultCss = {
     w-14 
     bg-white 
     elevation-1 
-    p-3 
+    px-2 
+    py-0
     rounded-t-none`
 }
 

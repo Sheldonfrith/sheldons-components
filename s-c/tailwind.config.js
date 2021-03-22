@@ -714,6 +714,7 @@ module.exports = {
     transitionProperty: ['responsive'],
     transitionTimingFunction: ['responsive'],
     transitionDuration: ['responsive'],
+    elevation: ['hover'],
   },
   plugins: [
     require('@tailwindcss/typography'),
@@ -723,22 +724,7 @@ module.exports = {
     require('tailwindcss-elevation')(['responsive']),
     require('tailwindcss-gradients'),
     require('./src/custom-tailwind-scrollbar'),
-    plugin(function({ addUtilities }) {
-      const newUtilities = {
-        '.s-flex-row': {
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-        },
-        '.s-flex-col': {
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        },
-      }
- 
-      addUtilities(newUtilities, ['responsive', 'hover'])
-    }),
+    
     
   ],
  

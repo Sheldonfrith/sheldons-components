@@ -15,8 +15,18 @@ import Button from '../inputs/Button';
 
 
 const DefaultTw = {
-  tabController: twParse`s-flex-row`,
-  tabContent: twParse`s-flex-col`,
+  tabController: twParse`
+  flex
+  flex-row
+  items-center
+  justify-between
+  `,
+  tabContent: twParse`
+  flex
+  flex-row
+  items-center
+  justify-between
+  `,
 };
 
 type Tab= {

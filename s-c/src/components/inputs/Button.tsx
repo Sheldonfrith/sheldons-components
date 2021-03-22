@@ -6,6 +6,7 @@ import useClassNameManager from '../../lib/useClassNameManager';
 const DefaultCss = {
   main: twParse`
   min-w-10 
+  max-w-16
   bg-orange-100
   text-pink-500 
   rounded 

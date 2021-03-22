@@ -1,8 +1,8 @@
 // tsdx.config.js
 
 const postcss = require('rollup-plugin-postcss');
-import transformer from 'ts-type-checked/transformer';
-import typescript from 'rollup-plugin-typescript2';
+const transformer =require('ts-type-checked/transformer');
+const typescript = require('rollup-plugin-typescript2');
 
 module.exports = {
   rollup(config, options) {

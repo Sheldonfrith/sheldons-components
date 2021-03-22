@@ -17,7 +17,18 @@ import useClassNameManager from '../../../lib/useClassNameManager';
 
 const DefaultTw = {
   SelectedOptionDisplay: {
-    main: twParse`overflow-x-scroll`
+    content: twParse`
+    overflow-x-scroll
+    overflow-y-hidden
+    scrollbar-thin
+    scrollbar-thumb-gray-500
+    flex
+    flex-row
+    items-center
+    justify-between
+    flex-nowrap
+    space-x-3
+    `
   }
 };
 
@@ -28,14 +39,36 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
   onChange,
   selected,
   styles,
+  placeholder
 }) => {
   const [displayDropdown, setDisplayDropdown] = useState<boolean>(false);
   const classNames = useClassNameManager(styles,DefaultTw);
+  const scrollAreaRef = useRef(null);
   //whenever displayDropdown changes, update the injected styles
   useEffect(()=>{
-    if (displayDropdown) {classNames.inject('SelectedOptionDisplay.main',twParse`rounded-b-none`); return;}
+    if (displayDropdown) {
+      classNames.inject('SelectedOptionDisplay.main',twParse`rounded-b-none`);
+      return;
+    }
+
     classNames.removeInjection('SelectedOptionDisplay.main',twParse`rounded-b-none`);
   },[displayDropdown]);
+
+  //whenever the content overflows the container
+  useEffect(()=>{
+    if (!scrollAreaRef?.current) {return;}
+    else {
+      //@ts-ignore
+    const isXOverflowing = scrollAreaRef.current.scrollWidth > scrollAreaRef.current.clientWidth;
+    const invisibleScrollbar = twParse`scrollbar-track-transparent`;
+    const visibleScrollbar = twParse`scrollbar-track-orange-200`;
+    if (isXOverflowing){
+      classNames.switchInjection('SelectedOptionDisplay.main',visibleScrollbar,invisibleScrollbar);
+    } else {
+      classNames.switchInjection('SelectedOptionDisplay.main',invisibleScrollbar, visibleScrollbar);
+    }
+    }
+  },[scrollAreaRef]);
 
   function handleItemClick(option: Option) {
     if (selected?.find(o => o.value === option.value)) return;
@@ -53,6 +86,7 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
       styles={classNames.getObj('main')}
     >
       <SelectedOptionDisplay
+        scrollAreaRef={scrollAreaRef}
         onClick={() => setDisplayDropdown(prev => !prev)}
         styles={classNames.getObj('SelectedOptionDisplay')}
       >
@@ -68,7 +102,7 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
                 </ItemWithXToRemove>
               );
             })
-          : 'Select an Option'}
+          : placeholder || 'Select an Option'}
       </SelectedOptionDisplay>
       <Dropdown
         display={displayDropdown}
@@ -76,7 +110,7 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
       >
         {children
           ? children
-          : options.map((option: Option) => {
+          : options? options.map((option: Option) => {
               return (
                 <DropdownItem
                   key={option.id}
@@ -89,7 +123,7 @@ const MultiSelect: React.FunctionComponent<MultiSelectProps> = ({
                   {option.content}
                 </DropdownItem>
               );
-            })}
+            }): <></>}
       </Dropdown>
     </Container>
   );

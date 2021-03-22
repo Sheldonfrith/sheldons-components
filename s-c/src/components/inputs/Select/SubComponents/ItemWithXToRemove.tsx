@@ -8,7 +8,10 @@ const DefaultCss = {
     cursor-pointer 
     bg-secondary 
     max-h-full
-    s-flex-row 
+    flex
+    flex-row
+    items-center
+    justify-between
     p-2 
     space-x-2`,
     icon: twParse`bg-danger w-2 h-2 m-x-2`,

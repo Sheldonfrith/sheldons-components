@@ -18,11 +18,15 @@ const DefaultCss: StyleDefaults = {
   main: twParse`
     bg-orange-600 
     text-pink-300 
-    s-flex-row 
+    flex
+    flex-row
+    items-center
     justify-between
     w-full `,
     logo: twParse`
-    s-flex-row
+    items-center
+    flex
+    flex-col
     `,
     titleArea: twParse`
     w-15
@@ -39,7 +43,9 @@ const DefaultCss: StyleDefaults = {
     text-orange-100
     `,
   navArea: twParse`
-    s-flex-row
+    flex
+    flex-row
+    items-center
     self-end
     justify-end
     w-16

@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useCallback, useEffect, useState } from 'react';
+import React, { InputHTMLAttributes, useCallback, useEffect, useRef, useState } from 'react';
 import { twParse } from '../../lib/functionHelpers';
 import {
   BaseStylesProp,
@@ -11,10 +11,17 @@ import ValidationMessage from './ValidationMessage';
 
 const DefaultCss = {
   main: twParse`
-    s-flex-row
+    flex
+    flex-row
+    items-center
+    justify-between
+    relative
     `,
   inputGroup: twParse`
-    s-flex-col
+    flex
+    flex-row
+    items-center
+    justify-between
     relative
     m-0
     p-0
@@ -86,26 +93,34 @@ export interface GeneralInputProps extends ReusableComponentBase, InputHTMLAttri
     validationMessage?: BaseStylesProp;
   };
   label?: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>|any
   validInput?: boolean;
   invalidMessage?: string;
   type?: TypesRequiringNoAdditionalStyling
+  disableDefaultValidation?: boolean
 }
 const GeneralInput: React.FunctionComponent<GeneralInputProps> = ({
   styles,
   label,
   validInput,
   invalidMessage,
+  disableDefaultValidation,
+  children,
+  step,
+  value,
+  type,
   ...otherProps
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const classNames = useClassNameManager(styles, DefaultCss);
-
+  const [localErrorMessage, setLocalErrorMessage] = useState<undefined|string>();
+  const [instanceId, setIstanceId] = useState(Math.random());
   useEffect(() => {
-    console.log('is valid input', validInput);
-    if (validInput === undefined) {
+    if (localErrorMessage === undefined) {
       classNames.inject('input', variantToColorMap.neutral);
       return;
     }
-    if (validInput === false) {
+    if (localErrorMessage) {
       classNames.switchInjection(
         'input',
         variantToColorMap.inValid,
@@ -113,17 +128,42 @@ const GeneralInput: React.FunctionComponent<GeneralInputProps> = ({
       );
       return;
     }
-    if (validInput === true) {
-      classNames.switchInjection(
-        'input',
-        variantToColorMap.valid,
-        variantToColorMap.inValid
-      );
-      return;
-    }
-  }, [validInput]);
+  }, [localErrorMessage]);
 
- 
+
+ //disable scroll on the input if its a number with no step
+ useEffect(()=>{
+  if (type==='number' && !step){
+    document.getElementById(instanceId.toString())?.addEventListener('wheel',preventDefaultScroll);
+  } else {
+    document.getElementById(instanceId.toString())?.removeEventListener('wheel',preventDefaultScroll);
+  }
+  function preventDefaultScroll(event:any){
+    event.preventDefault();
+  }
+ },[type, step]);
+
+ //disable step arrows when step is 0 or undefined
+ useEffect(()=>{
+  if (!step) classNames.inject('input',twParse`s-disable-spinner-arrows`);
+  else classNames.removeInjection('input',twParse`s-disable-spinner-arrows`);
+ },[step]);
+
+ //whenever input validity changes, alter local validity and message
+ useEffect(()=>{
+   if (!inputRef.current) return;
+   const browserSaysItsValid = (inputRef.current?.validity.valid);
+   const browsersErrorMessage = inputRef.current?.validationMessage;
+   const propsSayItsValid = !(validInput===false);
+   const shouldShowErrorMessage = (!propsSayItsValid  || disableDefaultValidation?false:!browserSaysItsValid);
+   console.log('shouldshow error message? ',shouldShowErrorMessage, browserSaysItsValid, browsersErrorMessage, propsSayItsValid);
+   if (shouldShowErrorMessage){
+     console.log('input is invalid, showing error message');
+     setLocalErrorMessage(invalidMessage||browsersErrorMessage);
+   } else {
+     setLocalErrorMessage(undefined);
+   }
+ },[inputRef.current, value, disableDefaultValidation, invalidMessage, validInput]);
 
   return (
     <div className={classNames.getString('main')}>
@@ -134,18 +174,24 @@ const GeneralInput: React.FunctionComponent<GeneralInputProps> = ({
       )}
       <div className={classNames.getString('inputGroup')}>
         <input
+          ref={inputRef}
+          id={instanceId.toString()}
           className={classNames.getString('input')}
+          step={(type==='number')?0.00000000000001:undefined}
+          type={type}
+          value={(value===undefined)?'':value}
           {...otherProps}
         />
-        {invalidMessage && validInput === false ? (
+      </div>
+      {children}
+        {localErrorMessage ? (
           <ValidationMessage
-            text={invalidMessage}
+            text={localErrorMessage}
             styles={classNames.getObj('validationMessage')}
           />
         ) : (
           <></>
         )}
-      </div>
     </div>
   );
 };

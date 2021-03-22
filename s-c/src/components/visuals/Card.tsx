@@ -5,15 +5,15 @@ import useClassNameManager from '../../lib/useClassNameManager';
 import Button from '../inputs/Button';
 const DefaultCss = {
   main: twParse`elevation-2
-    w-full
     text-center
     rounded-lg 
     shadow
     relative
     text-gray-900
     bg-white
-    s-flex-col
-    
+    flex
+    flex-col
+    items-center
     `
 };
 

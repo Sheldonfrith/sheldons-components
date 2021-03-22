@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext, useCallback, useRef} from 'react';
+import React, {useState, useEffect, useContext, useCallback, useRef, ReactNode} from 'react';
 import SimpleSelect from './Simple';
 import StyledSelect from './Styled';
 import MultiSelect from './Multi';
@@ -6,8 +6,8 @@ import { ReusableComponentBase, StyleOverride } from '../../../lib/typeHelpers';
 
 export type Option = {
     id: number | string;
-    value: string;
-    content: any;
+    value: string | number;
+    content: ReactNode;
   };
 export type SelectTypes = (
     "simple" |
@@ -16,7 +16,8 @@ export type SelectTypes = (
 );
 
 interface BaseSelectProps extends ReusableComponentBase{
-    options: Option[]
+    options: Option[] |undefined
+    placeholder?: string
 }
 interface SingleSelectBaseProps extends BaseSelectProps{
     selected: Option | undefined | null

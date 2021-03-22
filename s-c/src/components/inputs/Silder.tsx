@@ -23,6 +23,7 @@ const DefaultTw = {
   bg-transparent
   p-0
   m-0
+  cursor-pointer
   `,
   thumb: twParse`
   h-4
@@ -50,6 +51,7 @@ const DefaultTw = {
   focus:bg-pink-400
   flex
   items-center
+  cursor-pointer
   `,
   valueDisplay: twParse`
   w-10

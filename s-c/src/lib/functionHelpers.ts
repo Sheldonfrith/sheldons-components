@@ -31,6 +31,7 @@ export function traverseObject(o: object, callback: (key:string|number, value:an
 }
 
 export function twParse(strings: TemplateStringsArray, ...otherParams: any){
+    if (!strings?.length) return [];
     const str = strings[0];
     return str.split(/\s/).filter(item => item);
 }
