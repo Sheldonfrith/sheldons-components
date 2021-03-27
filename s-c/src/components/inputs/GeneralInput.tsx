@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useCallback, useEffect, useRef, useState } from 'react';
+import React, { InputHTMLAttributes, useEffect, useRef, useState } from 'react';
 import { twParse } from '../../lib/functionHelpers';
 import {
   BaseStylesProp,
@@ -114,7 +114,7 @@ const GeneralInput: React.FunctionComponent<GeneralInputProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const classNames = useClassNameManager(styles, DefaultCss);
   const [localErrorMessage, setLocalErrorMessage] = useState<undefined|string>();
-  const [instanceId, setIstanceId] = useState(Math.random());
+  const instanceId = Math.random();
   useEffect(() => {
     if (localErrorMessage === undefined) {
       classNames.inject('input', variantToColorMap.neutral);

@@ -1,4 +1,3 @@
-import React, {DetailedHTMLProps, AllHTMLAttributes, useState} from 'react';
 
 export interface ReusableComponentBase {
     styles?: BaseStylesProp

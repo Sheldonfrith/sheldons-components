@@ -1,12 +1,8 @@
 import React, {
   useState,
   useEffect,
-  useContext,
-  useCallback,
-  useRef,
-  ChangeEvent,
+  
 } from 'react';
-import styled from 'styled-components';
 import Dropdown from './SubComponents/Dropdown';
 import DropdownItem from './SubComponents/DropdownItem';
 import { Option, StyledSelectProps } from './index';

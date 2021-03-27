@@ -1,9 +1,5 @@
 import React, {
-  useState,
-  useEffect,
-  useContext,
-  useCallback,
-  useRef,
+  
 } from 'react';
 import { twParse } from '../../lib/functionHelpers';
 import { ReusableComponentBase, StyleOverride } from '../../lib/typeHelpers';
@@ -37,7 +33,6 @@ interface ValidationMessageProps extends ReusableComponentBase {
 }
 
 const ValidationMessage: React.FunctionComponent<ValidationMessageProps> = ({
-  children,
   styles,
   text,
 }) => {

@@ -1,13 +1,10 @@
-import React, {
-  Dispatch,
+import {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useState,
 } from 'react';
 import {
   BaseStylesProp,
-  ReusableComponentBase,
   StyleDefaults,
   StyleOverride,
   TwClasses,
@@ -202,6 +199,7 @@ class StylePropsCalculator {
     const defaultsMapped = {};
     traverseObject(
       this.initDefaultStyles,
+      //@ts-expect-error
       (key: string | number, value: any, path: string[], parent: object) => {
         // //console.log('tranversing defaults', key, value, path);
         const isStringArray =
@@ -232,6 +230,7 @@ class StyleOverrideCombiner {
     const newObj = { ...baseObj };
     traverseObject(
       overrideObj,
+      //@ts-expect-error
       (key: string | number, value: any, path: string[], parent: object) => {
         if (!value) return;
         const theseKeys = Object.keys(value);

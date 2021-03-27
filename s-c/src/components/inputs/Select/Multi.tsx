@@ -1,16 +1,13 @@
 import React, {
   useState,
   useEffect,
-  useContext,
-  useCallback,
   useRef,
-  ChangeEvent,
 } from 'react';
 import Dropdown from './SubComponents/Dropdown';
 import DropdownItem from './SubComponents/DropdownItem';
 import ItemWithXToRemove from './SubComponents/ItemWithXToRemove';
 import { MultiSelectProps, Option } from './index';
-import SelectedOptionDisplay, { SelectedOptionDisplayStyles } from './SubComponents/SelectedOptionDisplay';
+import SelectedOptionDisplay from './SubComponents/SelectedOptionDisplay';
 import Container from './SubComponents/StyledSelectContainer';
 import {twParse}from '../../../lib/functionHelpers';
 import useClassNameManager from '../../../lib/useClassNameManager';

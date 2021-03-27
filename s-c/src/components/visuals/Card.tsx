@@ -1,8 +1,7 @@
-import React, { DetailedHTMLProps, AllHTMLAttributes, useState, useEffect } from 'react';
+import React from 'react';
 import { twParse } from '../../lib/functionHelpers';
 import { ReusableComponentBase } from '../../lib/typeHelpers';
 import useClassNameManager from '../../lib/useClassNameManager';
-import Button from '../inputs/Button';
 const DefaultCss = {
   main: twParse`elevation-2
     text-center

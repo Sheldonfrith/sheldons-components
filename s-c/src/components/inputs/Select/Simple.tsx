@@ -1,9 +1,7 @@
 import React, {
   useState,
   useEffect,
-  useContext,
-  useCallback,
-  useRef,
+ 
   ChangeEvent,
 } from 'react';
 import { Option, SimpleSelectProps } from './index';

@@ -1,9 +1,5 @@
 import React, {
-  useState,
   useEffect,
-  useContext,
-  useCallback,
-  useRef,
   MouseEventHandler,
 } from 'react';
 import { twParse } from '../../lib/functionHelpers';

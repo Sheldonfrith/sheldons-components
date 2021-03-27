@@ -1,17 +1,12 @@
 import React, {
   useState,
   useEffect,
-  useContext,
-  useCallback,
-  useRef,
 } from 'react';
 import { twParse } from '../../lib/functionHelpers';
-import { ReusableComponentBase, StyleOverride } from '../../lib/typeHelpers';
 import useClassNameManager from '../../lib/useClassNameManager';
 import GeneralInput, { GeneralInputProps } from './GeneralInput';
 import Select from './Select';
 import {unit} from 'mathjs';
-import { convertInterval } from '../../GPPSpecificComponents/units';
 
 const DefaultTw = {
   main: {
@@ -48,8 +43,6 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
   const withUnits= (outputUnit && allowedUnits?.length);
   const [convertedValue, setConvertedValue] = useState<number|undefined>(value);
   const [selectedUnit, setSelectedUnit] = useState<string|undefined>(outputUnit);
-  const [isValid, setIsValid] = useState<boolean>(true);
-  const [invalidMessage, setInvalidMessage] = useState<string|undefined>();
   //convert value to selected unit and decimal places
   useEffect(()=>{
     if (!withUnits || !selectedUnit || value === null || value === undefined) {
@@ -100,13 +93,6 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
     return converted;
   }
 
-  function shouldConvertStepByUnit(){
-    return (withUnits && selectedUnit && allowedUnits?.length && (allowedUnits?.length > 1));
-  }
-  function convertedStep(){
-    console.log('returning converted step');
-    return 0;
-  }
 
   function handleChange(e:any){
     console.log('change detected with ',e.target.value);

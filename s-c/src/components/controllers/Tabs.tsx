@@ -1,9 +1,6 @@
 import React, {
   useState,
-  useEffect,
-  useContext,
-  useCallback,
-  useRef,
+ 
   ReactNode,
 } from 'react';
 import { twParse } from '../../lib/functionHelpers';
@@ -43,7 +40,7 @@ interface TabsProps extends ReusableComponentBase {
 }
 
 const Tabs: React.FunctionComponent<TabsProps> = ({
-  children,
+
   styles,
   tabs
 }) => {

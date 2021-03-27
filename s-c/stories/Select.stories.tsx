@@ -29,7 +29,7 @@ const meta: Meta = {
 export default meta;
 
 const props = {
-    type: SelectTypes.Simple,
+    type: "styled",
     options: [
         {id: 1, value:1, content: "option 1"},
         {id: 2, value: 2, content: "option 2"},

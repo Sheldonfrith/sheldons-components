@@ -1,9 +1,7 @@
 import React, {
   useState,
   useEffect,
-  useContext,
   useCallback,
-  useRef,
   InputHTMLAttributes,
 } from 'react';
 import { twParse } from '../../lib/functionHelpers';
@@ -107,7 +105,7 @@ const Slider: React.FunctionComponent<SliderProps> = ({
   }, [isFocused]);
 
   const Thumb = useCallback(
-    (props: any, state: any) => (
+    (props: any) => (
       <div {...props} className={classNames.getString('thumb')}>
         
       </div>
@@ -116,7 +114,7 @@ const Slider: React.FunctionComponent<SliderProps> = ({
   );
 
   const Track = useCallback(
-    (props: any, state: any) => (
+    (props: any ) => (
       <div
         {...props}
         

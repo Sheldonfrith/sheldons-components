@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { twParse } from '../../lib/functionHelpers';
 import { ReusableComponentBase, StyleOverride } from '../../lib/typeHelpers';
 import useClassNameManager from '../../lib/useClassNameManager';
