@@ -7,14 +7,14 @@ const typescript = require('rollup-plugin-typescript2');
 module.exports = {
   rollup(config, options) {
     config.plugins.push(
-      typescript({
-        transformers: [
-          service => ({
-            before: [transformer(service.getProgram())],
-            after: [],
-          }),
-        ],
-      }),
+      // typescript({
+      //   transformers: [
+      //     service => ({
+      //       before: [transformer(service.getProgram())],
+      //       after: [],
+      //     }),
+      //   ],
+      // }),
       postcss({
         config: {
           path: './postcss.config.js',

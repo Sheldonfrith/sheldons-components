@@ -52,7 +52,7 @@ const Tabs: React.FunctionComponent<TabsProps> = ({
       <div className={classNames.getString('tabController')}>
       <NavController initialOption={currentTab}  setCurrentOption={(option: string)=>setCurrentTab(option)}>
         {tabs.map(tab=>{
-            return <Button key={tab.id} id={tab.id} onClick={(e:any)=>{}}>{tab.navTabContent}</Button>
+            return <Button key={tab.id} id={tab.id} onClick={()=>{}}>{tab.navTabContent}</Button>
         })}
       </NavController>
       </div>

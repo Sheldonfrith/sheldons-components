@@ -1,8 +1,7 @@
-import React, {useState, useEffect, useContext, useCallback, useRef, RefObject} from 'react';
+import React, { RefObject} from 'react';
 import { twParse } from '../../../../lib/functionHelpers';
 import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelpers';
 import useClassNameManager from '../../../../lib/useClassNameManager';
-import ScrollArea from 'react-scrollbar';
 
 const DefaultCss = {
     main: twParse`

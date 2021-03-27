@@ -55,7 +55,7 @@ export default function useClassNameManager(
     (path: string) => {
     //   console.log('getting fresh className for ', path);
       if (!calculatedStyles) return twCascade(_.get(defaults, path)); //always return defaults if no props or overrides
-      const componentStyles: object = _.get(calculatedStyles, path);
+      const componentStyles: object|undefined = _.get(calculatedStyles, path);
       //console.log('getting string classname for ', path, targetObject);
       if (!componentStyles) return twCascade(_.get(defaults,path));
       const isStyleOverrideObj = Object.keys(componentStyles).includes('partial');
@@ -172,9 +172,9 @@ export default function useClassNameManager(
 }
 
 class StylePropsCalculator {
-  private calculatedStyles;
-  private initPropStyles;
-  private initDefaultStyles;
+  private calculatedStyles: BaseStylesProp;
+  private initPropStyles: BaseStylesProp;
+  private initDefaultStyles: StyleDefaults;
   public constructor(
     initPropStyles: BaseStylesProp,
     initDefaultStyles: StyleDefaults
@@ -295,7 +295,7 @@ class StyleOverrideCombiner {
 }
 
 class ClassNameCalculator {
-  private obj;
+  private obj: StyleOverride|undefined;
   public constructor(obj?: StyleOverride) {
     this.obj = obj;
   }

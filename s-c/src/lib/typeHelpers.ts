@@ -6,7 +6,7 @@ export interface ReusableComponentBase {
     name?: string
 }
 export interface BaseStylesProp {
-    [componentName: string]: (StyleOverride | BaseStylesProp)
+    [componentName: string]: (StyleOverride | BaseStylesProp| undefined)
 };
 export interface StyleOverride {
     partial: boolean
