@@ -1,1 +1,0 @@
-export type SCPD = {css:string|undefined};//Styled component prop defaults
