@@ -75,7 +75,7 @@ const Button: React.FunctionComponent<ButtonProps> = ({
   return (
     <button 
     className={tw.getString('main')} 
-    onClick={submit?onClick:()=>{}}
+    onClick={submit?()=>{}:onClick}
     type={submit?'submit':'button'}
     >
       {children}

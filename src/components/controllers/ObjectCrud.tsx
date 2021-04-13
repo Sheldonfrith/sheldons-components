@@ -1,4 +1,5 @@
 import React, {
+  useEffect,
   useState,
  
 } from 'react';
@@ -8,6 +9,7 @@ import useClassNameManager from '../../lib/useClassNameManager';
 import Button from '../inputs/Button';
 import Select, { Option } from '../inputs/Select';
 import Card from '../visuals/Card';
+import _ from 'lodash';
 
 const DefaultTw = {
   Card: {
@@ -22,13 +24,13 @@ const DefaultTw = {
 };
 
 export interface CrudableObject {
-    id: string|number
-   name: string
+    id?: string|number|null
+   name?: string|null
 }
 
 export interface EditFormProps extends ReusableComponentBase{
-    object: any,
-    setObject: any,
+    object: object,
+    setObject: (newObject: object)=>void,
 }
 
 interface ObjectCrudProps extends ReusableComponentBase {
@@ -36,9 +38,11 @@ interface ObjectCrudProps extends ReusableComponentBase {
     EditForm: React.FunctionComponent<EditFormProps>
     editFormProps?: unknown
     savedObjects?: CrudableObject[]
-    setSavedObjects: any
-    apiSaveCallback?: any
-    apiDeleteCallback?: any
+    setSavedObjects: React.Dispatch<React.SetStateAction<any>>
+    apiSaveCallback?: (objToSave: object) => void
+    apiDeleteCallback?: (objToDelete: object)=>void 
+    editingObject?: CrudableObject
+    setEditingObject?: React.Dispatch<React.SetStateAction<any>>
 }
 
 const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
@@ -51,18 +55,37 @@ const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
   setSavedObjects,
   apiDeleteCallback,
   apiSaveCallback,
+  editingObject,
+  setEditingObject
 }) => {
+    console.log('savedObjects in object crud = ',savedObjects);
     const [selectedObject, setSelectedObject] = useState<CrudableObject|undefined>();
     const [loadedObject ,setLoadedObject] = useState<CrudableObject|undefined>();
 
+    //keep loaded object and editing object in sync
+    useEffect(()=>{
+      if (!editingObject) return;
+      if (_.isEqual(editingObject, loadedObject)) return;
+      setSelectedObject(editingObject);
+      setLoadedObject(editingObject);
+    },[editingObject]);
+
+    useEffect(()=>{
+      if (!loadedObject) return;
+      if (_.isEqual(editingObject, loadedObject)) return;
+      setEditingObject?setEditingObject(loadedObject):null;
+    },[loadedObject, setEditingObject]);
+
     function savedObjectsToOptions(): Option[]|undefined{
-        const savedOptions = savedObjects?.map(savedObject=>{
+      if (!savedObjects || savedObjects.length < 1) 
+        return undefined;
+      const savedOptions = savedObjects.map(savedObject=>{
             return crudableObjectToOption(savedObject);
         });
         return savedOptions?.filter((item: Option | undefined) => item) as Option[];
     }
     function crudableObjectToOption(obj: CrudableObject | undefined): Option | undefined{
-        if (!obj) return undefined;
+        if (!obj || obj.id ===null || obj.id === undefined ) return undefined;
         return {id: obj.id, value: obj.id, content: obj.name};
     }
     function getSavedObjectFromOption(option: Option | undefined){
@@ -71,8 +94,9 @@ const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
     }
     function handleSaveClick(){
          if (!loadedObject) return;
-         apiSaveCallback(loadedObject);
-          setSavedObjects((prev: any[]) => {
+         apiSaveCallback?apiSaveCallback(loadedObject):null;
+          setSavedObjects((prev: CrudableObject[]|undefined) => {
+            if (!prev) return [loadedObject];
             const clone = [...prev];
             const existingObj  = clone.findIndex(obj=>obj.id == loadedObject.id);
             if (existingObj) clone[existingObj] = loadedObject;
@@ -82,8 +106,9 @@ const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
     }
     function handleDeleteClick(){
       if (!loadedObject) return;
-      apiDeleteCallback(loadedObject);
-      setSavedObjects((prev: any[])=>{
+      apiDeleteCallback?apiDeleteCallback(loadedObject):null;
+      setSavedObjects((prev: CrudableObject[]|undefined)=>{
+        if (!prev) return [loadedObject];
         const clone = [...prev];
         const existingObj = clone.findIndex(obj=>obj.id === loadedObject.id);
         if (!existingObj) return clone;
@@ -91,11 +116,16 @@ const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
         return clone;
       });
     }
+    function handleLoadClick(){
+      if (!selectedObject) return;
+      setLoadedObject(selectedObject);
+    }
   const classNames = useClassNameManager(styles, DefaultTw);
   return (
   <Card styles={classNames.getObj('Card')}>
       <h3>{title}</h3>
       <div className={classNames.getString('actionsContainer')}>
+        
       <Select 
         type="styled" 
         options={savedObjectsToOptions()}
@@ -104,11 +134,13 @@ const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
         placeholder={`Select Existing`}
     >
       </Select>
-      <Button onClick={()=>setLoadedObject(selectedObject)}>Load</Button>
+      <Button onClick={handleLoadClick}>Load</Button>
       <Button onClick={handleSaveClick}>Save</Button>
       <Button onClick={handleDeleteClick}>Delete</Button>
       </div>
+      {loadedObject?
       <EditForm object={loadedObject} setObject={setLoadedObject} {...editFormProps}/>
+      :<></>}
 </Card>
   );
 };
