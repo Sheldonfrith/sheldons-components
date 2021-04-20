@@ -1,5 +1,5 @@
 {
-  "version": "0.3.32",
+  "version": "0.3.33",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -78,6 +78,7 @@
   },
   "dependencies": {
     "@mariusmarais/tailwind-cascade": "^0.0.4",
+    "@material-ui/icons": "^4.11.2",
     "@tailwindcss/aspect-ratio": "^0.2.0",
     "@tailwindcss/forms": "^0.2.1",
     "@tailwindcss/line-clamp": "^0.2.0",
