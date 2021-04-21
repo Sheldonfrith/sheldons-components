@@ -1,31 +1,30 @@
 import React, {
   useState,
   useEffect,
+  SetStateAction,
 } from 'react';
-import { twParse } from '../../lib/functionHelpers';
-import useClassNameManager from '../../lib/useClassNameManager';
 import GeneralInput, { GeneralInputProps } from './GeneralInput';
-import Select from './Select';
+import  { SimpleSelectProps } from './Select';
 import {unit} from 'mathjs';
 
-const DefaultTw = {
-  main: {
-    input: twParse`
-      max-w-10
-    `
-  },
-  staticUnitLabel: twParse`
+// const DefaultTw = {
+//   main: {
+//     input: twParse`
+//       max-w-10
+//     `
+//   },
+//   staticUnitLabel: twParse`
   
-  `,
-};
+//   `,
+// };
 
-interface NumberInputProps extends GeneralInputProps {
+export interface NumberInputProps extends GeneralInputProps {
   outputUnit?: string
   allowedUnits?: string[]
+  setUnitSelectProps?: React.Dispatch<SetStateAction<SimpleSelectProps|undefined>>
   value: number
   step?: undefined
   decimals?: number
-  staticUnit?: string
 }
 
 const NumberInput: React.FunctionComponent<NumberInputProps> = ({
@@ -35,11 +34,10 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
   onChange,
   max,
   min,
-  staticUnit,
+  setUnitSelectProps,
   decimals,
   ...props
 }) => {
-  const classNames = useClassNameManager(props.styles, DefaultTw);
   const withUnits= (outputUnit && allowedUnits?.length);
   const [convertedValue, setConvertedValue] = useState<number|undefined>(value);
   const [selectedUnit, setSelectedUnit] = useState<string|undefined>(outputUnit);
@@ -100,10 +98,19 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
     withUnits?convertedOnChange(e):onChange(e);
   }
  
+  if (setUnitSelectProps){
+    setUnitSelectProps({
+      type: 'simple',
+      options: allowedUnits!.map(unit=>({id: unit, value: unit, content: unit})),
+      selected: selectedUnit?{id: selectedUnit, value: selectedUnit, content: selectedUnit}:undefined,
+      onChange: (newOption)=> {
+        if (typeof newOption?.value === 'string') setSelectedUnit(newOption.value);
+      }
+    })
+  }
 
   return (
     <GeneralInput
-      styles={classNames.getObj('main')}
       value={withUnits?convertedValue:value}
       onChange={handleChange}
       max={withUnits?convertToSelected(Number(max)):max}
@@ -111,19 +118,6 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
       type='number'
       {...props}
     >
-      {withUnits?
-      <Select 
-        type="simple" 
-        options={allowedUnits!.map(unit=>({id: unit, value: unit, content: unit}))} 
-        selected={selectedUnit?{id: selectedUnit, value: selectedUnit, content: selectedUnit}:undefined}
-        onChange={(newOption)=> {
-          if (typeof newOption?.value === 'string') setSelectedUnit(newOption.value);
-        }}
-      />
-      :<></>}
-      {staticUnit?
-      <div className={classNames.getString('staticUnitLabel')}>{staticUnit}</div> 
-    :<></>}
     </GeneralInput>
   );
 };

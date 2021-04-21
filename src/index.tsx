@@ -1,9 +1,8 @@
 
 import './styles/icons.css';
-import './styles/tailwind.css';
 export {default as Button}from './components/inputs/Button';
 export {default as GeneralInput} from './components/inputs/GeneralInput';
-export {default as Select} from './components/inputs/Select/index';
+export {default as Select, StyledSelectProps, MultiSelectProps, SimpleSelectProps} from './components/inputs/Select/index';
 export {default as Slider} from './components/inputs/Silder';
 export {default as CheckBox} from './components/inputs/CheckBox';
 export {default as NumberInput} from './components/inputs/NumberInput';

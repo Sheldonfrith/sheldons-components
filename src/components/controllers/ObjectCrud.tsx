@@ -1,27 +1,21 @@
 import React, {
   useEffect,
   useState,
- 
+
 } from 'react';
-import { twParse } from '../../lib/functionHelpers';
 import { ReusableComponentBase} from '../../lib/typeHelpers';
-import useClassNameManager from '../../lib/useClassNameManager';
 import Button from '../inputs/Button';
 import Select, { Option } from '../inputs/Select';
 import Card from '../visuals/Card';
 import _ from 'lodash';
+import styled from 'styled-components';
 
-const DefaultTw = {
-  Card: {
-      main: twParse`
-        `,
-  },
-  actionsContainer: twParse`
-    flex
-    flex-row
-    items-center
-  `,
-};
+const ActionsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
 
 export interface CrudableObject {
     id?: string|number|null
@@ -40,14 +34,13 @@ interface ObjectCrudProps extends ReusableComponentBase {
     savedObjects?: CrudableObject[]
     setSavedObjects: React.Dispatch<React.SetStateAction<any>>
     apiSaveCallback?: (objToSave: object) => void
-    apiDeleteCallback?: (objToDelete: object)=>void 
+    apiDeleteCallback?: (objToDelete: object)=>void
     editingObject?: CrudableObject
     setEditingObject?: React.Dispatch<React.SetStateAction<any>>
 }
 
 const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
- 
-  styles,
+
   title,
   EditForm,
   editFormProps,
@@ -77,7 +70,7 @@ const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
     },[loadedObject, setEditingObject]);
 
     function savedObjectsToOptions(): Option[]|undefined{
-      if (!savedObjects || savedObjects.length < 1) 
+      if (!savedObjects || savedObjects.length < 1)
         return undefined;
       const savedOptions = savedObjects.map(savedObject=>{
             return crudableObjectToOption(savedObject);
@@ -120,14 +113,13 @@ const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
       if (!selectedObject) return;
       setLoadedObject(selectedObject);
     }
-  const classNames = useClassNameManager(styles, DefaultTw);
   return (
-  <Card styles={classNames.getObj('Card')}>
+  <Card >
       <h3>{title}</h3>
-      <div className={classNames.getString('actionsContainer')}>
-        
-      <Select 
-        type="styled" 
+      <ActionsContainer>
+
+      <Select
+        type="styled"
         options={savedObjectsToOptions()}
         selected={crudableObjectToOption(selectedObject)}
         onChange={(obj: Option | undefined)=>setSelectedObject(getSavedObjectFromOption(obj))}
@@ -137,7 +129,7 @@ const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
       <Button onClick={handleLoadClick}>Load</Button>
       <Button onClick={handleSaveClick}>Save</Button>
       <Button onClick={handleDeleteClick}>Delete</Button>
-      </div>
+      </ActionsContainer>
       {loadedObject?
       <EditForm object={loadedObject} setObject={setLoadedObject} {...editFormProps}/>
       :<></>}

@@ -1,6 +1,10 @@
+import { FlattenSimpleInterpolation } from "styled-components";
+
+export type ScProp = {custCss?: string | FlattenSimpleInterpolation};
+
 
 export interface ReusableComponentBase {
-    styles?: BaseStylesProp
+    styles?: any
     id?: string
     key?: any
     name?: string

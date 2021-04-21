@@ -1,33 +1,34 @@
 import React from 'react';
-import { twParse } from '../../../../lib/functionHelpers';
-import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelpers';
-import useClassNameManager from '../../../../lib/useClassNameManager';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import { ReusableComponentBase, ScProp, } from '../../../../lib/typeHelpers';
 
-const DefaultCss = {
-    main: twParse`
-    cursor-pointer
-    hover:bg-orange-100
-    `
-}
+const Main = styled.div<ScProp>`
+${props => props.custCss}
+`;
 
+
+// const DefaultCss = {
+//     main: twParse`
+//     cursor-pointer
+//     hover:bg-orange-100
+//     `
+// }
+export type DropdownItemStyle = {main: string| FlattenSimpleInterpolation}
 
 interface DropdownItemProps extends ReusableComponentBase{
     onClick: any
     isSelected: boolean
-    styles?: {
-        main: StyleOverride
-    }
+    styles?: DropdownItemStyle
 }
 const DropdownItem: React.FunctionComponent<DropdownItemProps> =({
     //@ts-ignore
     children, onClick, isSelected, styles
 })=> {
-    const classNames = useClassNameManager(styles, DefaultCss);
 
 return (
-<div onClick={onClick} className={classNames.getString('main')} >
+<Main onClick={onClick}  custCss={styles?.main}>
     {children}
-</div>
+</Main>
 );
 }
 export default DropdownItem;

@@ -5,13 +5,24 @@ import React, {
   ChangeEvent,
 } from 'react';
 import { Option, SimpleSelectProps } from './index';
-import { twParse } from '../../../lib/functionHelpers';
-import useClassNameManager from '../../../lib/useClassNameManager';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import {ScProp} from '../../../lib/typeHelpers';
 
-const DefaultCss = {
-    select: twParse``,
-    option: twParse``,
-}
+const Select = styled.select<ScProp>`
+${props => props.custCss}
+`;
+const OptionEl = styled.option<ScProp>`
+${props => props.custCss}
+`;
+
+// const DefaultCss = {
+//     select: twParse``,
+//     option: twParse``,
+// }
+export type SimpleSelectStyle = {
+  select: string | FlattenSimpleInterpolation
+  option: string | FlattenSimpleInterpolation
+};
 
 const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
   children,
@@ -25,7 +36,6 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
     selected
   );
   const [value, setValue] = useState<undefined | string|number>(undefined);
-    const classNames = useClassNameManager(styles, DefaultCss);
   //whenever selected option or internal selected option change ,change value
   useEffect(() => {
     if (selected) setValue(selected.value);
@@ -44,26 +54,26 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
 
 
   return (
-    <select
+    <Select
       value={value}
       onChange={handleChange}
-      className={classNames.getString('select')}
+      custCss={styles?.select}
     >
       {children
         ? children
         : options? options.map((option: Option) => {
             return (
-              <option
+              <OptionEl
+                custCss={styles?.option}
                 key={option.id}
                 value={option.value}
-                className={classNames.getString('option')}
                 
               >
                 {option.content}
-              </option>
+              </OptionEl>
             );
           }):<></>}
-    </select>
+    </Select>
   );
 };
 export default SimpleSelect;

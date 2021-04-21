@@ -1,44 +1,55 @@
 import React from 'react';
-import { twParse } from '../../../../lib/functionHelpers';
-import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelpers';
-import useClassNameManager from '../../../../lib/useClassNameManager';
+import { ReusableComponentBase, ScProp } from '../../../../lib/typeHelpers';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
-const DefaultCss = {
-    container: twParse`
-    cursor-pointer 
-    bg-secondary 
-    max-h-full
-    flex
-    flex-row
-    items-center
-    justify-between
-    p-2 
-    space-x-2`,
-    icon: twParse`bg-danger w-2 h-2 m-x-2`,
-    textContainer: twParse`
-        flex-shrink-0
-    `,
+const Main = styled.div<ScProp>`
+${props => props.custCss}
+`;
+const TextContainer = styled.div<ScProp>`
+${props => props.custCss}
+`;
+
+const Icon = styled.div<ScProp>`
+${props => props.custCss}
+`;
+
+// const DefaultCss = {
+//     container: twParse`
+//     cursor-pointer 
+//     bg-secondary 
+//     max-h-full
+//     flex
+//     flex-row
+//     items-center
+//     justify-between
+//     p-2 
+//     space-x-2`,
+//     icon: twParse`bg-danger w-2 h-2 m-x-2`,
+//     textContainer: twParse`
+//         flex-shrink-0
+//     `,
+// };
+
+export type ItemWithXToRemoveStyle = {
+    main?: string | FlattenSimpleInterpolation
+     textContainer?: string | FlattenSimpleInterpolation
+      icon?: string | FlattenSimpleInterpolation
 };
 
 interface ItemWithXToRemoveProps extends ReusableComponentBase{
     onClick: any
-    styles?: {
-        container: StyleOverride
-        textContainer: StyleOverride
-        icon: StyleOverride
-    } 
+    styles?: ItemWithXToRemoveStyle
 }
 const ItemWithXToRemove: React.FunctionComponent<ItemWithXToRemoveProps> =({
     onClick, children, styles
 })=> {
-    const classNames = useClassNameManager(styles, DefaultCss);
 
 return (
-<div onClick={onClick} className={classNames.getString('container')} >
-    <div className={classNames.getString('textContainer')}>{children}</div>
-    <div className="gg-close">
-    </div>
-</div>
+<Main custCss={styles?.main} onClick={onClick} >
+    <TextContainer custCss={styles?.textContainer}>{children}</TextContainer>
+    <Icon custCss={styles?.icon} className="gg-close">
+    </Icon>
+</Main>
 );
 }
 export default ItemWithXToRemove;

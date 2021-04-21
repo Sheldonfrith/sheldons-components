@@ -1,8 +1,13 @@
 import React, { ReactNode} from 'react';
-import SimpleSelect from './Simple';
+import SimpleSelect, { SimpleSelectStyle } from './Simple';
 import StyledSelect from './Styled';
 import MultiSelect from './Multi';
-import { ReusableComponentBase, StyleOverride } from '../../../lib/typeHelpers';
+import { ReusableComponentBase} from '../../../lib/typeHelpers';
+import { StyledSelectContainerStyle } from './SubComponents/StyledSelectContainer';
+import { SelectedOptionDisplayStyle } from './SubComponents/SelectedOptionDisplay';
+import { DropdownStyles } from './SubComponents/Dropdown';
+import { DropdownItemStyle } from './SubComponents/DropdownItem';
+import { ItemWithXToRemoveStyle } from './SubComponents/ItemWithXToRemove';
 
 export type Option = {
     id: number | string;
@@ -25,21 +30,15 @@ interface SingleSelectBaseProps extends BaseSelectProps{
 }
 export interface SimpleSelectProps extends SingleSelectBaseProps{
     type: 'simple'
-    styles?:{
-        select: StyleOverride   
-        option: StyleOverride
-    }
+    styles?:SimpleSelectStyle
 }
 export interface StyledSelectProps extends SingleSelectBaseProps{
     type: 'styled'
     styles?: {
-        Container: StyleOverride
-        SelectedOptionDisplay: {
-            main: StyleOverride},
-        DropdownContainer: {
-            main: StyleOverride},
-        DropdownItem: {
-            main: StyleOverride};
+        Container: StyledSelectContainerStyle
+        SelectedOptionDisplay: SelectedOptionDisplayStyle
+        DropdownContainer: DropdownStyles
+        DropdownItem: DropdownItemStyle
     }
 }
 export interface MultiSelectProps extends BaseSelectProps{
@@ -47,23 +46,14 @@ export interface MultiSelectProps extends BaseSelectProps{
     selected: Option[] | undefined | null
     onChange: (newOptions: Option[]| undefined)=>any;
     styles?: {
-        Container: StyleOverride
-        SelectedOptionDisplay: {
-            main: StyleOverride}
-        ItemWithXToRemove: {
-            container: StyleOverride
-            textContainer: StyleOverride
-            icon: StyleOverride
-        }
-        DropdownContainer:{
-            main: StyleOverride
-        }
-        DropdownItem: {
-            main: StyleOverride
-        }
+        Container: StyledSelectContainerStyle
+        SelectedOptionDisplay: SelectedOptionDisplayStyle
+        DropdownContainer: DropdownStyles
+        DropdownItem: DropdownItemStyle
+        ItemWithXToRemove: ItemWithXToRemoveStyle
     }
 }
-type SelectProps = SimpleSelectProps | MultiSelectProps | StyledSelectProps;
+export type SelectProps = SimpleSelectProps | MultiSelectProps | StyledSelectProps;
 
 
 const Select: React.FunctionComponent<SelectProps> =(props)=> {

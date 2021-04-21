@@ -79,7 +79,7 @@ module.exports = {
         "600": "#3b3533",
         "DEFAULT": "#5f5552"
       },
-      "orange": {
+      "brown": {//!!! change to orange or it wont work
         "100": "#f7f4f3",
         "200": "#e7dedb",
         "300": "#cbb8b1",

@@ -1,49 +1,57 @@
 import React, {
   
 } from 'react';
-import { twParse } from '../../lib/functionHelpers';
-import { ReusableComponentBase, StyleOverride } from '../../lib/typeHelpers';
-import useClassNameManager from '../../lib/useClassNameManager';
+import { FlattenSimpleInterpolation } from 'styled-components';
+import { ReusableComponentBase } from '../../lib/typeHelpers';
+import styled from 'styled-components';
+import {ScProp} from '../../lib/typeHelpers';
 
-const DefaultTw = {
-  main: twParse`
-    flex
-    flex-row
-    justify-start
-    items-center
-    m-0
-    p-0
-    text-2
-    text-red
-  `,
-  icon: twParse`
-  w-3
-  h-3
-  `,
-  text: twParse``,
-};
+// const DefaultTw = {
+//   main: twParse`
+//     flex
+//     flex-row
+//     justify-start
+//     items-center
+//     m-0
+//     p-0
+//     text-2
+//     text-red
+//   `,
+//   icon: twParse`
+//   w-3
+//   h-3
+//   `,
+//   text: twParse``,
+// };
+const Main = styled.div<ScProp>`
+${props => props.custCss}
+`;
+
+const Text = styled.div<ScProp>`
+${props => props.custCss}
+`;
+
+
+export type ValidationMessageStyle = {
+  main?: string | FlattenSimpleInterpolation
+  text?: string | FlattenSimpleInterpolation
+}
 
 interface ValidationMessageProps extends ReusableComponentBase {
   text: string;
-  styles?: {
-    main: StyleOverride;
-    icon: StyleOverride;
-    text: StyleOverride;
-  };
+  styles?: ValidationMessageStyle
 }
 
 const ValidationMessage: React.FunctionComponent<ValidationMessageProps> = ({
   styles,
   text,
 }) => {
-  const classNames = useClassNameManager(styles, DefaultTw);
   return (
-    <div className={classNames.getString('main')}>
+    <Main custCss={styles?.main}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className={classNames.getString('icon')}
         >
           <path
             fillRule="evenodd"
@@ -51,8 +59,8 @@ const ValidationMessage: React.FunctionComponent<ValidationMessageProps> = ({
             clipRule="evenodd"
           />
         </svg>
-      <div className={classNames.getString('text')}>{text}</div>
-    </div>
+      <Text custCss={styles?.text}>{text}</Text>
+    </Main>
   );
 };
 export default ValidationMessage;

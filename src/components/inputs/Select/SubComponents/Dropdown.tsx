@@ -1,36 +1,35 @@
 import React from 'react';
-import { twParse } from '../../../../lib/functionHelpers';
-import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelpers';
-import useClassNameManager from '../../../../lib/useClassNameManager';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import { ReusableComponentBase, ScProp,  } from '../../../../lib/typeHelpers';
 
+const Main = styled.div<ScProp>`
+    ${props=>props.custCss}    
+`;
+// const DefaultCss = {
+//     main: twParse`
+//     absolute 
+//     top-3/4 
+//     w-14 
+//     bg-white 
+//     elevation-1 
+//     px-2 
+//     py-0
+//     rounded-t-none`
+// }
 
-const DefaultCss = {
-    main: twParse`
-    z-20 
-    absolute 
-    top-3/4 
-    w-14 
-    bg-white 
-    elevation-1 
-    px-2 
-    py-0
-    rounded-t-none`
-}
+export type DropdownStyles = {main: string|FlattenSimpleInterpolation};
 
 interface DropdownProps extends ReusableComponentBase{
-    styles?: {
-        main: StyleOverride
-    }
+    styles?: DropdownStyles
     display: boolean
 }
 const Dropdown: React.FunctionComponent<DropdownProps> =({children, styles, display})=> {
-const classNames = useClassNameManager(styles, DefaultCss);
 
 if (display){
 return (
-<div className={classNames.getString('main')}>
+<Main custCss={styles?.main}>
     {children}
-</div>
+</Main>
 );
 } else {
     return <></>

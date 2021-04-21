@@ -1,28 +1,31 @@
 import React from 'react';
 import useOnClickOutside from 'use-onclickoutside';
-import { twParse } from '../../../../lib/functionHelpers';
-import { ReusableComponentBase, StyleOverride } from '../../../../lib/typeHelpers';
-import useClassNameManager from '../../../../lib/useClassNameManager';
+import { ReusableComponentBase } from '../../../../lib/typeHelpers';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import {ScProp} from '../../../../lib/typeHelpers';
 
-const DefaultCss = {
-    main: twParse`
-    relative 
-    text-4 
-    w-14 
-    p-0 
-    m-4
-    flex
-    flex-row
-    items-center
-    justify-center
-    `
-}
+const Main = styled.div<ScProp>`
+${props => props.custCss}
+`;
 
+// const DefaultCss = {
+//     main: twParse`
+//     relative 
+//     text-4 
+//     w-14 
+//     p-0 
+//     m-4
+//     flex
+//     flex-row
+//     items-center
+//     justify-center
+//     `
+// }
+
+export type StyledSelectContainerStyle = {main: string | FlattenSimpleInterpolation};
 
 interface StyledSelectContainerProps extends ReusableComponentBase{
-    styles?: {
-        main: StyleOverride
-    }
+    styles?: StyledSelectContainerStyle
     closeCallback: any
 }
 const StyledSelectContainer: React.FunctionComponent<StyledSelectContainerProps> =({
@@ -31,12 +34,11 @@ const StyledSelectContainer: React.FunctionComponent<StyledSelectContainerProps>
     const ref = React.useRef(null)
 
   useOnClickOutside(ref, closeCallback);
-const classNames = useClassNameManager(styles, DefaultCss);
 
 return (
-<div ref={ref} className={classNames.getString('main')}>
+<Main ref={ref} custCss={styles?.main}>
     {children}
-</div>
+</Main>
 );
 }
 export default StyledSelectContainer;

@@ -8,8 +8,7 @@ import DropdownItem from './SubComponents/DropdownItem';
 import { Option, StyledSelectProps } from './index';
 import SelectedOptionDisplay from './SubComponents/SelectedOptionDisplay';
 import Container from './SubComponents/StyledSelectContainer';
-import useClassNameManager from '../../../lib/useClassNameManager';
-import { twParse } from '../../../lib/functionHelpers';
+import { css, FlattenSimpleInterpolation } from 'styled-components';
 
 const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
   children,
@@ -21,14 +20,15 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
 }) => {
   const [displayDropdown, setDisplayDropdown] = useState<boolean>(false);
 
-  const classNames = useClassNameManager(styles, undefined);
-
+  const [selectedOptionDisplayStyleOverride, setSelectedOptionDisplayStyleOverride]= useState<FlattenSimpleInterpolation|undefined>();
   //whenever displayDropdown changes, update the injected styles
   useEffect(()=>{
-    if (displayDropdown) {classNames.inject('SelectedOptionDisplay.main',twParse`rounded-b-none`); return;}
-    classNames.removeInjection('SelectedOptionDisplay.main',twParse`rounded-b-none`);
+    if (displayDropdown) {
+      setSelectedOptionDisplayStyleOverride(css`border-bottom-right-radius: 0; border-bottom-left-radius: 0;`);
+      return;
+    }
+    setSelectedOptionDisplayStyleOverride(undefined);
   },[displayDropdown]);
-
   function handleItemClick(option: Option) {
     //console.log('item clicked in StyledSelect', option);
     onChange(option);
@@ -36,24 +36,24 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
   return (
     <Container
       closeCallback={() => setDisplayDropdown(false)}
-      styles={classNames.getObj('Container')}
+      styles={styles?.Container}
     >
       <SelectedOptionDisplay
         onClick={() => setDisplayDropdown(prev => !prev)}
-        styles={classNames.getObj('SelectedOptionDisplay')}
+        styles={{...styles?.SelectedOptionDisplay, main: css`${styles?.SelectedOptionDisplay.main}${selectedOptionDisplayStyleOverride}`}}
       >
         {selected ? selected.content : placeholder || 'Select an Option'}
       </SelectedOptionDisplay>
       <Dropdown
         display={displayDropdown}
-        styles={classNames.getObj('DropdownContainer')}
+        styles={styles?.DropdownContainer}
       >
         {children
           ? children
           : options?options.map((option: Option) => {
               return (
                 <DropdownItem
-                  styles={classNames.getObj('DropdownItem')}
+                  styles={styles?.DropdownItem}
                   key={option.id}
                   onClick={() => {
                     setDisplayDropdown(false);
