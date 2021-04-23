@@ -1,6 +1,5 @@
 import React, {
-  useState,
-  useEffect,
+ 
  
   ChangeEvent,
 } from 'react';
@@ -30,18 +29,7 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
   onChange,
   selected,
   styles,
-  placeholder,
 }) => {
-  const [internalSelectedOption, setInternalSelectedOption] = useState(
-    selected
-  );
-  const [value, setValue] = useState<undefined | string|number>(undefined);
-  //whenever selected option or internal selected option change ,change value
-  useEffect(() => {
-    if (selected) setValue(selected.value);
-    if (internalSelectedOption) setValue(internalSelectedOption.value);
-    setValue(placeholder);
-  }, [selected, internalSelectedOption]);
 
   function getOptionByValue(value: string) {
     return options?.find((option: Option) => option.value === value);
@@ -49,13 +37,12 @@ const SimpleSelect: React.FunctionComponent<SimpleSelectProps> = ({
   function handleChange(e: ChangeEvent<HTMLSelectElement>) {
     const option = getOptionByValue(e.target.value);
     onChange(option);
-    setInternalSelectedOption(option);
   }
 
 
   return (
     <Select
-      value={value}
+      value={selected?selected.value:undefined}
       onChange={handleChange}
       custCss={styles?.select}
     >

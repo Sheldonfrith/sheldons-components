@@ -1,10 +1,8 @@
 import React, {
   useState,
   useEffect,
-  SetStateAction,
 } from 'react';
 import GeneralInput, { GeneralInputProps } from './GeneralInput';
-import  { SimpleSelectProps } from './Select';
 import {unit} from 'mathjs';
 
 // const DefaultTw = {
@@ -20,8 +18,7 @@ import {unit} from 'mathjs';
 
 export interface NumberInputProps extends GeneralInputProps {
   outputUnit?: string
-  allowedUnits?: string[]
-  setUnitSelectProps?: React.Dispatch<SetStateAction<SimpleSelectProps|undefined>>
+  selectedUnit?: string
   value: number
   step?: undefined
   decimals?: number
@@ -29,18 +26,22 @@ export interface NumberInputProps extends GeneralInputProps {
 
 const NumberInput: React.FunctionComponent<NumberInputProps> = ({
   outputUnit,
-  allowedUnits,
   value,
   onChange,
   max,
   min,
-  setUnitSelectProps,
   decimals,
+  selectedUnit,
   ...props
 }) => {
-  const withUnits= (outputUnit && allowedUnits?.length);
+
+// debugging
+  useEffect(()=>{
+      console.log('input detected value change', value);
+  },[value]);
+
+  const withUnits= (outputUnit);
   const [convertedValue, setConvertedValue] = useState<number|undefined>(value);
-  const [selectedUnit, setSelectedUnit] = useState<string|undefined>(outputUnit);
   //convert value to selected unit and decimal places
   useEffect(()=>{
     if (!withUnits || !selectedUnit || value === null || value === undefined) {
@@ -51,6 +52,7 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
       console.log('value changed, and should convert it',value);
       let convertedValue = unit(value,outputUnit!).toNumber(selectedUnit);
       if (outputUnit === selectedUnit) convertedValue = value; // this deals with a mathjs bug
+      console.log('setting converted value to ', convertedValue);
       setConvertedValue(convertedValue);
     }
   },[withUnits, value, selectedUnit, outputUnit, setConvertedValue]);
@@ -70,7 +72,7 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
     }
 
   function convertedOnChange(e:any){
-    if (!selectedUnit || !withUnits || (allowedUnits?.length ===1)) 
+    if (!selectedUnit || !withUnits ) 
     {
       onChange(e); 
       return; 
@@ -86,7 +88,7 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
   }
 
   function convertToSelected(input: number |undefined){
-    if (!input || !selectedUnit || !outputUnit || (allowedUnits?.length ===1)) return input;
+    if (!input || !selectedUnit || !outputUnit ) return input;
     const converted = unit(input,outputUnit).toNumber(selectedUnit);
     return converted;
   }
@@ -98,17 +100,6 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
     withUnits?convertedOnChange(e):onChange(e);
   }
  
-  if (setUnitSelectProps){
-    setUnitSelectProps({
-      type: 'simple',
-      options: allowedUnits!.map(unit=>({id: unit, value: unit, content: unit})),
-      selected: selectedUnit?{id: selectedUnit, value: selectedUnit, content: selectedUnit}:undefined,
-      onChange: (newOption)=> {
-        if (typeof newOption?.value === 'string') setSelectedUnit(newOption.value);
-      }
-    })
-  }
-
   return (
     <GeneralInput
       value={withUnits?convertedValue:value}

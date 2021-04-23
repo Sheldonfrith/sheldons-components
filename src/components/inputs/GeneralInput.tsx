@@ -11,7 +11,7 @@ const Main = styled.div<ScProp>`
 ${props => props.custCss}
 `;
 
-const Label = styled.label<ScProp>`
+const Label = styled.div<ScProp>`
 ${props => props.custCss}
 `;
 
