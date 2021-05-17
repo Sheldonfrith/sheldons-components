@@ -1,6 +1,8 @@
 import React, {
   useState,
   useEffect,
+  ChangeEvent,
+  SetStateAction,
 } from 'react';
 import GeneralInput, { GeneralInputProps } from './GeneralInput';
 import {unit} from 'mathjs';
@@ -16,100 +18,201 @@ import {unit} from 'mathjs';
 //   `,
 // };
 
+
+//! implement custom conversions... mathjs conversions are very buggy...
+// function convertMetreToFt(metreVal:number|undefined){
+//   if (metreVal === undefined)return undefined;
+//   else return metreVal * 3.28084;
+// }
+// function convertFtToMetre(ftVal: number|undefined){
+//   if (ftVal === undefined) return undefined;
+//   else return ftVal * 0.3048;
+// }
+export function trimDecimalsString(input?: string, decimalsToKeep?: number){
+  if (!input || decimalsToKeep === undefined || decimalsToKeep === null) return input;
+  const parsed = parseFloat(input)
+  if (!parsed || isNaN(parsed)) return input;
+  return parsed.toFixed(decimalsToKeep);
+}
+export function trimDecimalsNumber(input?: number, decimalsToKeep?: number): number | undefined{
+  if (!input || isNaN(input)) return input;
+  console.log('trying toFixed on '+input+'. Decimals to keep='+decimalsToKeep);
+  const result = input.toFixed(decimalsToKeep);
+  if (!result) return undefined;
+  return parseFloat(result);
+}
 export interface NumberInputProps extends GeneralInputProps {
   outputUnit?: string
   selectedUnit?: string
-  value: number
-  step?: undefined
+  value?: number
+  step?: undefined | string | number
   decimals?: number
+  withUnitConversions?: boolean
+  onChange?: undefined
+  setValue: React.Dispatch<SetStateAction<number|undefined>>
 }
 
 const NumberInput: React.FunctionComponent<NumberInputProps> = ({
   outputUnit,
   value,
-  onChange,
+  setValue,
   max,
   min,
   decimals,
   selectedUnit,
+  withUnitConversions,
   ...props
 }) => {
-
-// debugging
-  useEffect(()=>{
-      console.log('input detected value change', value);
-  },[value]);
-
-  const withUnits= (outputUnit);
+  const [localBaseVal, setLocalBaseVal] = useState<number|undefined>(value);
+  const [inputIsFocused, setInputIsFocused ] = useState<boolean>(false);
   const [convertedValue, setConvertedValue] = useState<number|undefined>(value);
-  //convert value to selected unit and decimal places
+  //WHEN THE INPUT IS NOT FOCUSED, UPDATE THE LOCAL VALUE FROM THE FOREIGN VALUE (ONE WAY ONLY)
+  //WHEN THE INPUT IS FOCUSED, UPDATE THE FOREIGN VALUE FROM THE LOCAL VALUE (ONE WAY ONLY)
+
+  //debugging
   useEffect(()=>{
-    if (!withUnits || !selectedUnit || value === null || value === undefined) {
-      console.log('value changed, but shouldnt convert it',value);
-      return;
-    }
-    else {
-      console.log('value changed, and should convert it',value);
-      let convertedValue = unit(value,outputUnit!).toNumber(selectedUnit);
-      if (outputUnit === selectedUnit) convertedValue = value; // this deals with a mathjs bug
-      console.log('setting converted value to ', convertedValue);
-      setConvertedValue(convertedValue);
-    }
-  },[withUnits, value, selectedUnit, outputUnit, setConvertedValue]);
+    console.log('number input focused?',inputIsFocused);
+  },[inputIsFocused]);
 
-
-  //trims value to decimals
   useEffect(()=>{
-    if (decimals === undefined || !value) return; 
-    if (countDecimals(value) <= decimals) return;
-    const trimmedValue = Number(value).toFixed(decimals);
-    onChange({target: {value: trimmedValue}});
-  },[decimals,value, onChange]);
+    console.log('Number input (Sheldons) is remounting');
+  },[])
+  //whenever local base value changes, if input is focused, send the update out
+  useEffect(()=>{
+    if (!inputIsFocused || localBaseVal == value) return;
+    console.log('updating external value, in number input... localVal='+localBaseVal+'externalVal='+ value+'inputIsFocused='+ inputIsFocused);
+    setValue(localBaseVal);
+  },[localBaseVal,inputIsFocused,setValue, value]);
 
-  function countDecimals (value:number) {
-    if(Math.floor(value) === value) return 0;
-    return value.toString().split(".")[1]?.length || 0;
-    }
+  //whenever foreign value changes, if input is NOT focus, update the local value
+  useEffect(()=>{
+    if (inputIsFocused || localBaseVal == value) return;
+    console.log('updating local from external, in number input', value, localBaseVal);
+    setLocalBaseVal(value);
+  },[value, setLocalBaseVal, inputIsFocused]);
 
-  function convertedOnChange(e:any){
-    if (!selectedUnit || !withUnits ) 
-    {
-      onChange(e); 
-      return; 
-    }
-    else {
-      let newVal = e.target.value;
-      const uncoverted = unit(newVal,selectedUnit);
-      let converted = uncoverted.toNumber(outputUnit!);
-      if (selectedUnit === outputUnit) converted = newVal;// this removes a bug with the mathjs library when converting identical units
-      console.log('done converting new value,',newVal, converted);
-      onChange({target: {value: converted}});
-    }  
+//  //! Following methods and effects apply regardless of whether conversions are active or not
+
+  // //trims value to decimals
+  // useEffect(()=>{
+  //   if (decimals === undefined || !value) return; 
+  //   if (countDecimals(value) <= decimals) return;
+  //   const trimmedValue = Number(value).toFixed(decimals);
+  //   onChange({target: {value: trimmedValue}});
+  // },[decimals,value, onChange]);
+
+  // function countDecimals (value:number) {
+  //   if(Math.floor(value) === value) return 0;
+  //   return value.toString().split(".")[1]?.length || 0;
+  //   }
+
+//   //! Following methods and effects apply only if conversions are INACTIVE
+   //When input changes and conversions are active
+  //set converted value to new input value
+  function handleChange(e: ChangeEvent<HTMLInputElement>){
+    console.log('changing local base value due to user input',e.target.value);
+    //prevent it from ever being NaN... instead convert to undefined
+    //always limit to 10 max decimal places, so that type conversions don't force-rounding
+    const newVal = parseFloat(e.target.value);
+    const sanitisedNewVal = (isNaN(newVal))?undefined:newVal;
+    setLocalBaseVal(sanitisedNewVal===undefined?undefined:trimDecimalsNumber(sanitisedNewVal,10));
   }
 
-  function convertToSelected(input: number |undefined){
-    if (!input || !selectedUnit || !outputUnit ) return input;
-    const converted = unit(input,outputUnit).toNumber(selectedUnit);
-    return converted;
-  }
+  // //whenever base value changes, if not the same as display value ,set display value
+  // useEffect(()=>{
+  //   if (value == displayValue) return;
+  //   setDisplayValue(value);
+  // },[value]);
+
+  // //When display value changes, convert it, and if this value is different than base value update base value
+  // useEffect(()=>{
+  //   if (displayValue != value){
+  //      onChange({target: {value: displayValue}});
+  //   }
+  //  },[displayValue]);
 
 
-  function handleChange(e:any){
-    console.log('change detected with ',e.target.value);
-    
-    withUnits?convertedOnChange(e):onChange(e);
+//  //! Following methods and effects only apply if conversions are ACTIVE
+function convertToSelected(input: number |undefined){
+  if (input == null || input == undefined || !selectedUnit || !outputUnit ) return input;
+  if (selectedUnit == outputUnit) return input;
+  // if (selectedUnit ==='ft' && outputUnit === 'm'){
+    // return convertMetreToFt(input);
+  // }
+  const converted = unit(input,outputUnit).toNumber(selectedUnit);
+  return trimDecimalsNumber(converted, 10);
+}
+
+function convertToBase(input: number | undefined){
+  if (input ==null || input == undefined || !selectedUnit || !outputUnit) return input;
+  if (selectedUnit == outputUnit) return input;
+  // if (selectedUnit === 'ft' && outputUnit === 'm'){
+    // return convertFtToMetre(input);
+  // }
+  const converted = unit(input, selectedUnit).toNumber(outputUnit);
+  return trimDecimalsNumber(converted,10);
+}
+
+  //When input changes and conversions are active
+  //set converted value to new input value
+  function handleChangeWithConversion(e: React.ChangeEvent<HTMLInputElement>){
+    console.log('changing local value, triggered by user input'+e.target.value);
+    const newVal = parseFloat(e.target.value);
+    const sanitisedNewVal = (isNaN(newVal))?undefined:newVal;
+    setConvertedValue(sanitisedNewVal===undefined?undefined:trimDecimalsNumber(sanitisedNewVal,10));
   }
- 
-  return (
-    <GeneralInput
-      value={withUnits?convertedValue:value}
-      onChange={handleChange}
-      max={withUnits?convertToSelected(Number(max)):max}
-      min={withUnits?convertToSelected(Number(min)):min}
-      type='number'
+
+  ///SAME AS ABOVE, THE UNITS CANNOT CHANGE WHILE THE INPUT IS IN FOCUS (probably 98%)
+  //SO DO NOT PULL ANY UPDATES FROM THE LOCALBASEVAL unless the input is in focus
+  //and likewise do not send any updates if the input is not in focus
+  useEffect(()=>{
+    if (inputIsFocused || convertToBase(convertedValue)===localBaseVal) return;
+    console.log('setting converted value from local base value ', localBaseVal);
+    setConvertedValue(convertToSelected(localBaseVal));
+  },[localBaseVal,inputIsFocused, convertedValue]);
+
+  useEffect(()=>{
+    if (!inputIsFocused || convertToBase(convertedValue) === localBaseVal) return;
+    console.log('setting local base value from converted val', convertedValue);
+    setLocalBaseVal(convertToBase(convertedValue));
+  },[convertedValue, inputIsFocused, localBaseVal])
+
+  //When selected Unit or output unit changes, (INPUT SHOULD NOT BE IN FOCUS) 
+  //convert the base value and set this as the new display value
+  useEffect(()=>{
+    if (inputIsFocused) return;
+    console.log('setting converted value from local base value DUE TO UNIT CHANGE', selectedUnit, outputUnit);
+    const convertedVal = convertToSelected(localBaseVal);
+    setConvertedValue(convertedVal);
+  },[selectedUnit, outputUnit,localBaseVal, inputIsFocused]);
+
+
+
+  if (withUnitConversions){
+    return (
+      <GeneralInput
       {...props}
+      setInputIsFocused={setInputIsFocused}
+      value={convertedValue}
+      onChange={handleChangeWithConversion}
+      max={convertToSelected(Number(max))}
+      min={convertToSelected(Number(min))}
+      type="number"
+      />
+    );
+  } else {
+    return (
+    <GeneralInput
+    {...props}
+      value={localBaseVal}
+      onChange={handleChange}
+      max={max}
+      min={min}
+      type='number'
     >
     </GeneralInput>
   );
+  }
+  
 };
 export default NumberInput;

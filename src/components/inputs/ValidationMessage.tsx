@@ -5,6 +5,7 @@ import { FlattenSimpleInterpolation } from 'styled-components';
 import { ReusableComponentBase } from '../../lib/typeHelpers';
 import styled from 'styled-components';
 import {ScProp} from '../../lib/typeHelpers';
+import ErrorIcon from '@material-ui/icons/Error';
 
 // const DefaultTw = {
 //   main: twParse`
@@ -26,7 +27,9 @@ import {ScProp} from '../../lib/typeHelpers';
 const Main = styled.div<ScProp>`
 ${props => props.custCss}
 `;
-
+const Icon = styled.div<ScProp>`
+${props => props.custCss}
+`;
 const Text = styled.div<ScProp>`
 ${props => props.custCss}
 `;
@@ -35,6 +38,7 @@ ${props => props.custCss}
 export type ValidationMessageStyle = {
   main?: string | FlattenSimpleInterpolation
   text?: string | FlattenSimpleInterpolation
+  icon?: string | FlattenSimpleInterpolation
 }
 
 interface ValidationMessageProps extends ReusableComponentBase {
@@ -48,7 +52,8 @@ const ValidationMessage: React.FunctionComponent<ValidationMessageProps> = ({
 }) => {
   return (
     <Main custCss={styles?.main}>
-        <svg
+        <Icon custCss={styles?.icon}>
+        {/* <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
@@ -58,7 +63,9 @@ const ValidationMessage: React.FunctionComponent<ValidationMessageProps> = ({
             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
             clipRule="evenodd"
           />
-        </svg>
+        </svg> */}
+        <ErrorIcon/>
+        </Icon>
       <Text custCss={styles?.text}>{text}</Text>
     </Main>
   );

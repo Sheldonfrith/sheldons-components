@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useEffect, useRef, useState } from 'react';
+import React, { InputHTMLAttributes, SetStateAction, useEffect, useRef, useState } from 'react';
 import { css, FlattenSimpleInterpolation } from 'styled-components';
 import {
   ReusableComponentBase,
@@ -6,7 +6,6 @@ import {
 import ValidationMessage, { ValidationMessageStyle } from './ValidationMessage';
 import styled from 'styled-components';
 import {ScProp} from '../../lib/typeHelpers';
-
 const Main = styled.div<ScProp>`
 ${props => props.custCss}
 `;
@@ -22,73 +21,6 @@ ${props => props.custCss}
 const Input = styled.input<ScProp>`
 ${props => props.custCss}
 `;
-// const DefaultCss = {
-//   main: twParse`
-//     flex
-//     flex-row
-//     items-center
-//     justify-between
-//     relative
-//     `,
-//   inputGroup: twParse`
-//     flex
-//     flex-row
-//     items-center
-//     justify-between
-//     relative
-//     m-0
-//     p-0
-//     `,
-//   input: twParse`
-//     first:mt-0
-//     border-b-0.1
-//     focus:outline-none
-//     font-medium
-//     transition
-//     rounded-b-none
-//     placeholder-orange-300
-//     duration-300 `,
-//   label: twParse`
-//     `,
-//   validationMessage: {
-//     main: twParse`
-//         absolute
-//         -bottom-5
-//     `,
-//   },
-// };
-// const variantToColorMap: { [variant: string]: TwClasses } = {
-//   neutral: 
-//   css`
-//     :hover{
-//       border-color: 
-//     }
-//   `
-//   [
-//     'hover:border-orange-400',
-//     'focus:border-orange-400',
-//     'focus:text-orange-400',
-//     'hover:text-orange-400',
-//     'text-orange-600',
-//     'border-orange-600',
-//   ],
-//   inValid: [
-//     'hover:border-red-400',
-//     'hover:text-red-400',
-//     'focus:text-orange-600',
-//     'focus:border-red-400',
-//     'text-orange-500',
-//     'border-red-300',
-//   ],
-//   valid: [
-//     'hover:text-green-400',
-//     'focus:text-orange-600',
-//     'focus:border-green-400',
-//     'hover:border-green-400',
-//     'border-green-300',
-//     'text-orange-500',
-//   ],
-// };
 
 type TypesRequiringNoAdditionalStyling = (
     'email'|
@@ -112,11 +44,12 @@ export interface GeneralInputProps extends ReusableComponentBase, InputHTMLAttri
     validationMessage?: ValidationMessageStyle;
   };
   label?: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>|any
+  // onChange: React.ChangeEventHandler<HTMLInputElement>|any
   validInput?: boolean;
   invalidMessage?: string;
   type?: TypesRequiringNoAdditionalStyling
   disableDefaultValidation?: boolean
+  setInputIsFocused?: React.Dispatch<SetStateAction<boolean>>
 }
 const GeneralInput: React.FunctionComponent<GeneralInputProps> = ({
   styles,
@@ -125,9 +58,10 @@ const GeneralInput: React.FunctionComponent<GeneralInputProps> = ({
   invalidMessage,
   disableDefaultValidation,
   children,
-  step,
   value,
   type,
+  step,
+  setInputIsFocused,
   ...otherProps
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -135,21 +69,7 @@ const GeneralInput: React.FunctionComponent<GeneralInputProps> = ({
   const instanceId = Math.random();
   const [inputCssOverride, setInputCssOverride] = useState<FlattenSimpleInterpolation|undefined>();
 
-  // useEffect(() => {
-  //   if (localErrorMessage === undefined) {
-  //     setInputCssOverride(css`${variantToColorMap.neutral}`)
-  //     classNames.inject('input', variantToColorMap.neutral);
-  //     return;
-  //   }
-  //   if (localErrorMessage) {
-  //     classNames.switchInjection(
-  //       'input',
-  //       variantToColorMap.inValid,
-  //       variantToColorMap.valid
-  //     );
-  //     return;
-  //   }
-  // }, [localErrorMessage]);
+
 
 
  //disable scroll on the input if its a number with no step
@@ -202,11 +122,13 @@ const GeneralInput: React.FunctionComponent<GeneralInputProps> = ({
       <InputGroup custCss={styles?.inputGroup}>
         <Input
           ref={inputRef}
+          onBlur={()=>setInputIsFocused?setInputIsFocused(false):null}
+          onFocus={()=>setInputIsFocused?setInputIsFocused(true):null}
           id={instanceId.toString()}
           custCss={css`${styles?.input}${inputCssOverride}`}
-          step={(type==='number')?0.00000000000001:undefined}
           type={type}
           value={(value===undefined)?'':value}
+          step={step}
           {...otherProps}
         />
       </InputGroup>
