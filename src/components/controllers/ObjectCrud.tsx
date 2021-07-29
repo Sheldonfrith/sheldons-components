@@ -51,7 +51,7 @@ const ObjectCrud: React.FunctionComponent<ObjectCrudProps> = ({
   editingObject,
   setEditingObject
 }) => {
-    console.log('savedObjects in object crud = ',savedObjects);
+    //console.log('savedObjects in object crud = ',savedObjects);
     const [selectedObject, setSelectedObject] = useState<CrudableObject|undefined>();
     const [loadedObject ,setLoadedObject] = useState<CrudableObject|undefined>();
 

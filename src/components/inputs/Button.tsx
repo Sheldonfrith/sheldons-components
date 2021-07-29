@@ -55,10 +55,10 @@ const Button: React.FunctionComponent<ButtonProps> = ({
   submit
 }) => {
   useEffect(() => {
-    //console.log('button mounting');
+    ////console.log('button mounting');
   }, []);
   useEffect(() => {
-    //console.log('button has new props', styles);
+    ////console.log('button has new props', styles);
   }, [styles]);
   const tw = useClassNameManager(styles, DefaultCss);
 

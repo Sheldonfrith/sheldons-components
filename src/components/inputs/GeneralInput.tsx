@@ -103,9 +103,9 @@ const GeneralInput: React.FunctionComponent<GeneralInputProps> = ({
    const browsersErrorMessage = inputRef.current?.validationMessage;
    const propsSayItsValid = !(validInput===false);
    const shouldShowErrorMessage = (!propsSayItsValid  || disableDefaultValidation?false:!browserSaysItsValid);
-   console.log('shouldshow error message? ',shouldShowErrorMessage, browserSaysItsValid, browsersErrorMessage, propsSayItsValid);
+   //console.log('shouldshow error message? ',shouldShowErrorMessage, browserSaysItsValid, browsersErrorMessage, propsSayItsValid);
    if (shouldShowErrorMessage){
-     console.log('input is invalid, showing error message');
+     //console.log('input is invalid, showing error message');
      setLocalErrorMessage(invalidMessage||browsersErrorMessage);
    } else {
      setLocalErrorMessage(undefined);

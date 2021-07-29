@@ -25,7 +25,7 @@ const ExamplePage: React.FunctionComponent<ExamplePageProps> = props => {
         setSelectedMulti(options);
     }
     useEffect(()=>{
-        console.log('pop content:',popContent);
+        //console.log('pop content:',popContent);
     },[popContent]);
 
     function popupSubmit(e:any) {

@@ -17,7 +17,7 @@ export default function useClassNameManager(
   stylesProp?: BaseStylesProp,
   defaults?: StyleDefaults
 ) {
-  //console.log('running hook (rerender) with defaults ', defaults);
+  ////console.log('running hook (rerender) with defaults ', defaults);
   const [internalOverrides, setInternalOverrides] = useState<BaseStylesProp>({
     none: { partial: true },
   });
@@ -27,7 +27,7 @@ export default function useClassNameManager(
 
   //un props or defaults or overrides change... combine the props with defaults and overrides to get calclulated styles
   useEffect(() => {
-    // console.log('change in styles prop, defaults, or internal overrides');
+    // //console.log('change in styles prop, defaults, or internal overrides');
     const initCalculator = new StylePropsCalculator(
       stylesProp || { none: { partial: true } },
       defaults || { none: [''] }
@@ -38,7 +38,7 @@ export default function useClassNameManager(
       propsPlusDefaults,
       internalOverrides
     );
-    // console.log(
+    // //console.log(
     //   'before and after internal overrides applied: ',
     //   propsPlusDefaults,
     //   plusOverrides
@@ -48,15 +48,15 @@ export default function useClassNameManager(
 
   //on calculatedStyles change
   useEffect(() => {
-    // console.log('calculated styles has changed', calculatedStyles);
+    // //console.log('calculated styles has changed', calculatedStyles);
   }, [calculatedStyles]);
 
   const getCName = useCallback(
     (path: string) => {
-    //   console.log('getting fresh className for ', path);
+    //   //console.log('getting fresh className for ', path);
       if (!calculatedStyles) return twCascade(_.get(defaults, path)); //always return defaults if no props or overrides
       const componentStyles: object|undefined = _.get(calculatedStyles, path);
-      //console.log('getting string classname for ', path, targetObject);
+      ////console.log('getting string classname for ', path, targetObject);
       if (!componentStyles) return twCascade(_.get(defaults,path));
       const isStyleOverrideObj = Object.keys(componentStyles).includes('partial');
       if (!isStyleOverrideObj)
@@ -72,7 +72,7 @@ export default function useClassNameManager(
   );
   const getObj = useCallback(
     (path: string): any => {
-      //console.log('geting obj, ',path);
+      ////console.log('geting obj, ',path);
       const target = _.get(calculatedStyles, path);
       if (!target) return undefined;
       const isStyleOverrideObj = Object.keys(target).includes('partial');
@@ -80,7 +80,7 @@ export default function useClassNameManager(
         throw new Error(
           'cannot use "getObj" method to get the styles for node(html element), only use this method for getting styles prop for React component'
         );
-      //console.log('successfully got object', target);
+      ////console.log('successfully got object', target);
       return { ...target };
     },
     [calculatedStyles]
@@ -132,7 +132,7 @@ export default function useClassNameManager(
         if (!existingObj || existingObj['partial'] === undefined)
           _.set(n, `${path}.partial`, true); //handle initialization of this path
         _.update(n, `${path}.tailwind`, function(classList: TwClasses) {
-        //   console.log('updating ', path, ' with ', classList, classesToAdd);
+        //   //console.log('updating ', path, ' with ', classList, classesToAdd);
           if (!classList) return [...classesToAdd];
           return [...classList, ...classesToAdd];
         });
@@ -187,26 +187,26 @@ class StylePropsCalculator {
     return this.calculatedStyles;
   }
   private calculateStyles(): BaseStylesProp {
-    // //console.log('beginning to calc styles with', this.initDefaultStyles, this.initPropStyles)
+    // ////console.log('beginning to calc styles with', this.initDefaultStyles, this.initPropStyles)
     const defaultsObj = this.getObjectFromDefaults();
-    // //console.log('got this default obj', defaultsObj);
+    // ////console.log('got this default obj', defaultsObj);
     const combiner = new StyleOverrideCombiner();
     return combiner.combineStyles(defaultsObj, this.initPropStyles);
   }
 
   private getObjectFromDefaults(): BaseStylesProp {
-    // //console.log('getting default object with ',this.initDefaultStyles);
+    // ////console.log('getting default object with ',this.initDefaultStyles);
     const defaultsMapped = {};
     traverseObject(
       this.initDefaultStyles,
       //@ts-expect-error
       (key: string | number, value: any, path: string[], parent: object) => {
-        // //console.log('tranversing defaults', key, value, path);
+        // ////console.log('tranversing defaults', key, value, path);
         const isStringArray =
           Array.isArray(value) && value.length && typeof value[0] === 'string';
         const isTwClasses = isStringArray;
         if (!isTwClasses) return;
-        // //console.log('tranversng for default create, IS TwClasses object', value, key, path);
+        // ////console.log('tranversng for default create, IS TwClasses object', value, key, path);
         const newValue = this.convertTwClassesToStyleOverride(value);
         _.set(defaultsMapped, path, newValue);
       }
@@ -226,7 +226,7 @@ class StyleOverrideCombiner {
     baseObj: BaseStylesProp,
     overrideObj: BaseStylesProp
   ): BaseStylesProp {
-    // console.log('combining styles', baseObj, overrideObj);
+    // //console.log('combining styles', baseObj, overrideObj);
     const newObj = { ...baseObj };
     traverseObject(
       overrideObj,
@@ -301,12 +301,12 @@ class ClassNameCalculator {
   }
   public getString() {
     if (!this.obj) return '';
-    // console.log('getting string in class name calculator with ', this.obj);
+    // //console.log('getting string in class name calculator with ', this.obj);
     //apply removals to classnames
     const classNamesList = this.obj.tailwindRemovals
       ? this.getFilteredClassNames()
       : this.obj.tailwind;
-    //   console.log('about to give this list to twCascade:',classNamesList);
+    //   //console.log('about to give this list to twCascade:',classNamesList);
     //use twcascade to get the classname
     return twCascade(classNamesList);
   }

@@ -31,7 +31,7 @@ function getJSX(){
             const id = child.props.id;
           return (
             <div key={id} onClick={()=>{
-                console.log('click detected on option ',id);
+                //console.log('click detected on option ',id);
                 setSelectedOption(id)
             }}>
                 {React.cloneElement(child,{isSelectedNavItem: (selectedOption === id)})}

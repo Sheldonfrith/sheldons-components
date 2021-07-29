@@ -30,7 +30,7 @@ const StyledSelect: React.FunctionComponent<StyledSelectProps> = ({
     setSelectedOptionDisplayStyleOverride(undefined);
   },[displayDropdown]);
   function handleItemClick(option: Option) {
-    //console.log('item clicked in StyledSelect', option);
+    ////console.log('item clicked in StyledSelect', option);
     onChange(option);
   }
   return (

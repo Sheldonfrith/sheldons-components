@@ -36,7 +36,7 @@ export function trimDecimalsString(input?: string, decimalsToKeep?: number){
 }
 export function trimDecimalsNumber(input?: number, decimalsToKeep?: number): number | undefined{
   if (!input || isNaN(input)) return input;
-  console.log('trying toFixed on '+input+'. Decimals to keep='+decimalsToKeep);
+  //console.log('trying toFixed on '+input+'. Decimals to keep='+decimalsToKeep);
   const result = input.toFixed(decimalsToKeep);
   if (!result) return undefined;
   return parseFloat(result);
@@ -71,23 +71,24 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
 
   //debugging
   useEffect(()=>{
-    console.log('number input focused?',inputIsFocused);
+    //console.log('number input focused?',inputIsFocused);
   },[inputIsFocused]);
 
   useEffect(()=>{
-    console.log('Number input (Sheldons) is remounting');
+    //console.log('Number input (Sheldons) is remounting');
   },[])
   //whenever local base value changes, if input is focused, send the update out
   useEffect(()=>{
+    //console.log('local base val has changed, might be sending out an update...'+inputIsFocused+','+localBaseVal+','+value);
     if (!inputIsFocused || localBaseVal == value) return;
-    console.log('updating external value, in number input... localVal='+localBaseVal+'externalVal='+ value+'inputIsFocused='+ inputIsFocused);
+    //console.log('updating external value, in number input... localVal='+localBaseVal+'externalVal='+ value+'inputIsFocused='+ inputIsFocused);
     setValue(localBaseVal);
   },[localBaseVal,inputIsFocused,setValue, value]);
 
   //whenever foreign value changes, if input is NOT focus, update the local value
   useEffect(()=>{
     if (inputIsFocused || localBaseVal == value) return;
-    console.log('updating local from external, in number input', value, localBaseVal);
+    //console.log('updating local from external, in number input', value, localBaseVal);
     setLocalBaseVal(value);
   },[value, setLocalBaseVal, inputIsFocused]);
 
@@ -110,14 +111,11 @@ const NumberInput: React.FunctionComponent<NumberInputProps> = ({
    //When input changes and conversions are active
   //set converted value to new input value
   function handleChange(e: ChangeEvent<HTMLInputElement>){
-    console.log('changing local base value due to user input',e.target.value);
-    //prevent it from ever being NaN... instead convert to undefined
-    //always limit to 10 max decimal places, so that type conversions don't force-rounding
+    //console.log('changing local base value due to user input',e.target.value);
     const newVal = parseFloat(e.target.value);
     const sanitisedNewVal = (isNaN(newVal))?undefined:newVal;
     setLocalBaseVal(sanitisedNewVal===undefined?undefined:trimDecimalsNumber(sanitisedNewVal,10));
   }
-
   // //whenever base value changes, if not the same as display value ,set display value
   // useEffect(()=>{
   //   if (value == displayValue) return;
@@ -156,7 +154,7 @@ function convertToBase(input: number | undefined){
   //When input changes and conversions are active
   //set converted value to new input value
   function handleChangeWithConversion(e: React.ChangeEvent<HTMLInputElement>){
-    console.log('changing local value, triggered by user input'+e.target.value);
+    //console.log('changing local value, triggered by user input'+e.target.value);
     const newVal = parseFloat(e.target.value);
     const sanitisedNewVal = (isNaN(newVal))?undefined:newVal;
     setConvertedValue(sanitisedNewVal===undefined?undefined:trimDecimalsNumber(sanitisedNewVal,10));
@@ -166,22 +164,23 @@ function convertToBase(input: number | undefined){
   //SO DO NOT PULL ANY UPDATES FROM THE LOCALBASEVAL unless the input is in focus
   //and likewise do not send any updates if the input is not in focus
   useEffect(()=>{
-    if (inputIsFocused || convertToBase(convertedValue)===localBaseVal) return;
-    console.log('setting converted value from local base value ', localBaseVal);
+    if (!withUnitConversions || inputIsFocused || convertToBase(convertedValue)===localBaseVal) return;
+    //console.log('setting converted value from local base value ', localBaseVal);
     setConvertedValue(convertToSelected(localBaseVal));
   },[localBaseVal,inputIsFocused, convertedValue]);
 
   useEffect(()=>{
-    if (!inputIsFocused || convertToBase(convertedValue) === localBaseVal) return;
-    console.log('setting local base value from converted val', convertedValue);
+    if (!withUnitConversions || !inputIsFocused || convertToBase(convertedValue) === localBaseVal) return;
+    //console.log('setting local base value from converted val', convertedValue);
     setLocalBaseVal(convertToBase(convertedValue));
   },[convertedValue, inputIsFocused, localBaseVal])
 
   //When selected Unit or output unit changes, (INPUT SHOULD NOT BE IN FOCUS) 
   //convert the base value and set this as the new display value
   useEffect(()=>{
-    if (inputIsFocused) return;
-    console.log('setting converted value from local base value DUE TO UNIT CHANGE', selectedUnit, outputUnit);
+    if (inputIsFocused || !withUnitConversions) return;
+    if (!selectedUnit && !outputUnit) return;
+    //console.log('setting converted value from local base value DUE TO UNIT CHANGE', selectedUnit, outputUnit);
     const convertedVal = convertToSelected(localBaseVal);
     setConvertedValue(convertedVal);
   },[selectedUnit, outputUnit,localBaseVal, inputIsFocused]);
@@ -204,6 +203,8 @@ function convertToBase(input: number | undefined){
     return (
     <GeneralInput
     {...props}
+    setInputIsFocused={setInputIsFocused}
+
       value={localBaseVal}
       onChange={handleChange}
       max={max}
