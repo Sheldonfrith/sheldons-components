@@ -5,7 +5,7 @@ import React, {
   SetStateAction,
 } from 'react';
 import GeneralInput, { GeneralInputProps } from './GeneralInput';
-import {unit} from 'mathjs';
+import math, {unit} from 'mathjs';
 
 // const DefaultTw = {
 //   main: {
@@ -17,6 +17,15 @@ import {unit} from 'mathjs';
   
 //   `,
 // };
+//! add units missing from mathjs
+math.createUnit('fraction',{
+  aliases: ['frac','fr'],
+})
+math.createUnit('percentage', {
+  aliases: ['%','prcnt'],
+  definition: '0.01 fractions'
+})
+math.createUnit('ratio')
 
 
 //! implement custom conversions... mathjs conversions are very buggy...
